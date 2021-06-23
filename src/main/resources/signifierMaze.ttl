@@ -1,0 +1,107 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix td: <https://www.w3.org/2019/wot/td#> .
+@prefix htv: <http://www.w3.org/2011/http#> .
+@prefix hctl: <https://www.w3.org/2019/wot/hypermedia#> .
+@prefix wotsec: <https://www.w3.org/2019/wot/security#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix js: <https://www.w3.org/2019/wot/json-schema#> .
+@prefix saref: <https://saref.etsi.org/core/> .
+@prefix signifier: <http://example.com/> .
+
+_:node1f8pdcr64x1 a signifier:Signifier;
+  signifier:hasAffordance _:node1f8pdcr64x23 .
+
+_:node1f8pdcr64x23 signifier:hasSequence _:node1f8pdcr64x24;
+  signifier:hasPrecondition _:node1f8pdcr64x2;
+  signifier:hasObjective _:node1f8pdcr64x5 .
+
+_:node1f8pdcr64x24 rdf:first _:node1f8pdcr64x7;
+  rdf:rest _:node1f8pdcr64x25 .
+
+_:node1f8pdcr64x25 rdf:first _:node1f8pdcr64x11;
+  rdf:rest _:node1f8pdcr64x26 .
+
+_:node1f8pdcr64x26 rdf:first _:node1f8pdcr64x15;
+  rdf:rest _:node1f8pdcr64x27 .
+
+_:node1f8pdcr64x27 rdf:first _:node1f8pdcr64x19;
+  rdf:rest rdf:nil .
+
+_:node1f8pdcr64x7 signifier:hasPrecondition _:node1f8pdcr64x2;
+  signifier:hasObjective _:node1f8pdcr64x3;
+  <https://example.com/environment1#hasMethod> _:node1f8pdcr64x8 .
+
+_:node1f8pdcr64x2 signifier:hasStatement _:node1f8pdcr64x9, _:node1f8pdcr64x28 .
+
+_:node1f8pdcr64x9 rdf:subject <https://example.com/environment1#thisAgent>;
+  rdf:predicate <https://example.com/environment1#isIn>;
+  rdf:object <https://example.com/environment1#room1> .
+
+_:node1f8pdcr64x3 signifier:hasStatement _:node1f8pdcr64x10, _:node1f8pdcr64x13 .
+
+_:node1f8pdcr64x10 rdf:subject <https://example.com/environment1#thisAgent>;
+  rdf:predicate <https://example.com/environment1#isIn>;
+  rdf:object <https://example.com/environment1#room2> .
+
+_:node1f8pdcr64x8 <https://example.com/environment1#hasParameter> "1"^^xsd:int;
+  <https://example.com/environment1#hasResult> "2"^^xsd:int .
+
+_:node1f8pdcr64x11 signifier:hasPrecondition _:node1f8pdcr64x3;
+  signifier:hasObjective _:node1f8pdcr64x4;
+  <https://example.com/environment1#hasMethod> _:node1f8pdcr64x12 .
+
+_:node1f8pdcr64x13 rdf:subject <https://example.com/environment1#thisAgent>;
+  rdf:predicate <https://example.com/environment1#isIn>;
+  rdf:object <https://example.com/environment1#room2> .
+
+_:node1f8pdcr64x4 signifier:hasStatement _:node1f8pdcr64x14, _:node1f8pdcr64x17 .
+
+_:node1f8pdcr64x14 rdf:subject <https://example.com/environment1#thisAgent>;
+  rdf:predicate <https://example.com/environment1#isIn>;
+  rdf:object <https://example.com/environment1#room5> .
+
+_:node1f8pdcr64x12 <https://example.com/environment1#hasParameter> "0"^^xsd:int;
+  <https://example.com/environment1#hasResult> "5"^^xsd:int .
+
+_:node1f8pdcr64x15 signifier:hasPrecondition _:node1f8pdcr64x4;
+  signifier:hasObjective _:node1f8pdcr64x5;
+  <https://example.com/environment1#hasMethod> _:node1f8pdcr64x16 .
+
+_:node1f8pdcr64x17 rdf:subject <https://example.com/environment1#thisAgent>;
+  rdf:predicate <https://example.com/environment1#isIn>;
+  rdf:object <https://example.com/environment1#room5> .
+
+_:node1f8pdcr64x5 signifier:hasStatement _:node1f8pdcr64x18, _:node1f8pdcr64x21, _:node1f8pdcr64x22,
+    _:node1f8pdcr64x29 .
+
+_:node1f8pdcr64x18 rdf:subject <https://example.com/environment1#thisAgent>;
+  rdf:predicate <https://example.com/environment1#isIn>;
+  rdf:object <https://example.com/environment1#room8> .
+
+_:node1f8pdcr64x16 <https://example.com/environment1#hasParameter> "0"^^xsd:int;
+  <https://example.com/environment1#hasResult> "8"^^xsd:int .
+
+_:node1f8pdcr64x19 signifier:hasPrecondition _:node1f8pdcr64x5;
+  signifier:hasObjective _:node1f8pdcr64x5;
+  <https://example.com/environment1#hasMethod> _:node1f8pdcr64x20 .
+
+_:node1f8pdcr64x21 rdf:subject <https://example.com/environment1#thisAgent>;
+  rdf:predicate <https://example.com/environment1#isIn>;
+  rdf:object <https://example.com/environment1#room8> .
+
+_:node1f8pdcr64x22 rdf:subject <https://example.com/environment1#thisAgent>;
+  rdf:predicate <https://example.com/environment1#isIn>;
+  rdf:object <https://example.com/environment1#room9> .
+
+_:node1f8pdcr64x20 <https://example.com/environment1#hasParameter> "1"^^xsd:int;
+  <https://example.com/environment1#hasResult> "9"^^xsd:int .
+
+_:node1f8pdcr64x28 rdf:subject <https://example.com/environment1#thisAgent>;
+  rdf:predicate <https://example.com/environment1#isIn>;
+  rdf:object <https://example.com/environment1#room1> .
+
+_:node1f8pdcr64x29 rdf:subject <https://example.com/environment1#thisAgent>;
+  rdf:predicate <https://example.com/environment1#isIn>;
+  rdf:object <https://example.com/environment1#room9> .

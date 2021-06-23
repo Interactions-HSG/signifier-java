@@ -1,0 +1,6 @@
+
+_:node1f8pdcr64x5 <http://example.com/hasStatement> _:node1f8pdcr64x30 .
+
+_:node1f8pdcr64x30 <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <https://example.com/environment1#thisAgent>;
+  <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <https://example.com/environment1#isIn>;
+  <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <https://example.com/environment1#room9> .
