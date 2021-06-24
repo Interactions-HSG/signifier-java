@@ -31,6 +31,24 @@ public class Affordance {
         return model;
     }
 
+    public Optional<Value> getValue(IRI predicate){
+      return Models.object(model.filter(affordanceId,predicate,null));
+
+    }
+
+    public Optional<Value> getValue(String predicate){
+        return getValue(RDFS.rdf.createIRI(predicate));
+    }
+
+    public Optional<Literal> getLiteral(IRI predicate){
+        return Models.objectLiteral(model.filter(affordanceId,predicate,null));
+
+    }
+
+    public Optional<Literal> getLiteral(String predicate){
+        return getLiteral(RDFS.rdf.createIRI(predicate));
+    }
+
     @Override
     public String toString(){
         return SignifierWriter.writeModel(model);
@@ -93,6 +111,10 @@ public class Affordance {
         public Builder add(IRI predicate, Value object){
             graphBuilder.add(affordanceId,predicate,object);
             return this;
+        }
+
+        public Builder add(String predicate, Value object){
+            return add(RDFS.rdf.createIRI(predicate),object);
         }
 
         public Builder add(Resource subject, IRI predicate, Value object){
