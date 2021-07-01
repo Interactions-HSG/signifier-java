@@ -1,6 +1,0 @@
-
-_:room1Id <http://example.com/hasStatement> _:room1S .
-
-_:room1S <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://example.com/thisAgent>;
-  <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <https://example.com/isIn>;
-  <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> <https://example.com/room1> .
