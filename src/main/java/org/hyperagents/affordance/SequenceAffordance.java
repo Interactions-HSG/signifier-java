@@ -1,3 +1,10 @@
+package org.hyperagents.affordance;
+
+import org.hyperagents.io.SignifierReader;
+import org.hyperagents.ontologies.RDFSOntology;
+import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.util.State;
+import org.hyperagents.util.RDFS;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;

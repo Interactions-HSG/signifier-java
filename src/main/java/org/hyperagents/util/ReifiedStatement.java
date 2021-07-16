@@ -1,3 +1,7 @@
+package org.hyperagents.util;
+
+import org.hyperagents.io.SignifierWriter;
+import org.hyperagents.ontologies.RDFSOntology;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.util.Models;

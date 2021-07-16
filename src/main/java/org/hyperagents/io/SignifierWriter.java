@@ -1,8 +1,11 @@
+package org.hyperagents.io;
+
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
+import org.hyperagents.signifier.Signifier;
 
 import java.io.ByteArrayOutputStream;
 

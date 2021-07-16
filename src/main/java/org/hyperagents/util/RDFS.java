@@ -1,3 +1,8 @@
+package org.hyperagents.util;
+
+import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.hyperagents.affordance.Affordance;
+import org.hyperagents.ontologies.RDFSOntology;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.DynamicModelFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -6,10 +11,11 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 
 import java.io.ByteArrayOutputStream;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class RDFS {
 
@@ -22,6 +28,27 @@ public class RDFS {
         while (iterator.hasNext()) {
             Value v = iterator.next();
             m.add(currentListId, rdf.createIRI(RDFSOntology.first), v);
+            if (iterator.hasNext()) {
+                BNode newListId = rdf.createBNode();
+                m.add(currentListId, rdf.createIRI(RDFSOntology.rest), newListId);
+                currentListId = newListId;
+
+            } else {
+                m.add(currentListId, rdf.createIRI(RDFSOntology.rest), rdf.createIRI(RDFSOntology.nil));
+            }
+
+        }
+        return m;
+    }
+
+    public static Model createAffordanceList(Resource listId, List<Affordance> list) {
+        Model m = new DynamicModelFactory().createEmptyModel();
+        Iterator<Affordance> iterator = list.iterator();
+        Resource currentListId = listId;
+        while (iterator.hasNext()) {
+            Affordance a = iterator.next();
+            m.add(currentListId, rdf.createIRI(RDFSOntology.first), a.getAffordanceId());
+            m.addAll(a.getModel());
             if (iterator.hasNext()) {
                 BNode newListId = rdf.createBNode();
                 m.add(currentListId, rdf.createIRI(RDFSOntology.rest), newListId);
@@ -77,6 +104,22 @@ public class RDFS {
 
         }
         return list;
+    }
+
+    public static void readBlock(Resource blockId, Model model, Model newModel) {
+        Model m = model.filter(blockId, null, null);
+        newModel.addAll(m);
+        Set<Resource> newResources = Models.objectResources(m);
+        for (Resource resourceId : newResources) {
+            readBlock(resourceId, model, newModel);
+        }
+    }
+
+    public static Model retrieveBlock(Resource blockId, Model model){
+        Model newModel = new ModelBuilder().build();
+        readBlock(blockId, model, newModel);
+        return newModel;
+
     }
 
 }

@@ -1,3 +1,5 @@
+package signifier;
+
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -13,6 +15,15 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
+import org.hyperagents.util.RDFS;
+import org.hyperagents.util.ReifiedStatement;
+import org.hyperagents.util.State;
+import org.hyperagents.affordance.Affordance;
+import org.hyperagents.signifier.Signifier;
+import org.hyperagents.signifier.StructuredSignifier;
+import org.hyperagents.signifier.SignifierModelBuilder;
+import org.hyperagents.ontologies.RDFSOntology;
+import org.hyperagents.ontologies.SignifierOntology;
 
 public class StructuredSignifierTest {
 

@@ -1,3 +1,10 @@
+package org.hyperagents.affordance;
+import org.hyperagents.io.SignifierReader;
+import org.hyperagents.io.SignifierWriter;
+import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.signifier.SignifierModelBuilder;
+import org.hyperagents.util.State;
+import org.hyperagents.util.RDFS;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
 
@@ -123,6 +130,7 @@ public class Affordance {
         }
 
         public Affordance build(){
+            graphBuilder.addType(affordanceId, rdf.createIRI(SignifierOntology.Affordance));
             return new Affordance(affordanceId, precondition, objective, graphBuilder.build());
         }
     }

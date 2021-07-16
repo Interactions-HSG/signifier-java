@@ -1,8 +1,13 @@
+package signifier;
 
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.hyperagents.util.RDFS;
+import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.ontologies.RDFSOntology;
+import org.hyperagents.signifier.Signifier;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

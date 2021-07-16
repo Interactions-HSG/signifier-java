@@ -1,6 +1,14 @@
+package affordance;
+
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
+import org.hyperagents.util.RDFS;
+import org.hyperagents.util.ReifiedStatement;
+import org.hyperagents.util.State;
+import org.hyperagents.affordance.Affordance;
+import org.hyperagents.affordance.SequenceAffordance;
+import org.hyperagents.ontologies.SignifierOntology;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;

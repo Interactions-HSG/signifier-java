@@ -1,5 +1,13 @@
+package org.hyperagents.signifier;
+
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
+import org.hyperagents.affordance.Affordance;
+import org.hyperagents.io.SignifierReader;
+import org.hyperagents.io.SignifierWriter;
+import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.util.RDFS;
+
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;

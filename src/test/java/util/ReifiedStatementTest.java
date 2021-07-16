@@ -1,17 +1,23 @@
+package util;
+
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.hyperagents.util.ReifiedStatement;
+import org.hyperagents.util.RDFS;
+import org.hyperagents.ontologies.RDFSOntology;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-public class StateTest {
+public class ReifiedStatementTest {
+
+
     private ValueFactory rdf;
-    Resource statementId;
-    Resource subject;
-    IRI predicate;
-    Value object;
+    private Resource statementId;
+    private Resource subject;
+    private IRI predicate;
+    private Value object;
     private ReifiedStatement statement;
-    private State state;
 
     @Before
     public void init(){
@@ -20,19 +26,24 @@ public class StateTest {
         subject = rdf.createBNode("subject");
         predicate = rdf.createIRI(RDFSOntology.TYPE);
         object = rdf.createLiteral(30);
-        statement = new ReifiedStatement(statementId, subject, predicate, object);
-        Resource stateId = rdf.createBNode("state");
-        state = new State.Builder(stateId).addStatement(statement).build();
+        this.statement=new ReifiedStatement(statementId,subject,predicate,object);
+    }
+
+    @Test
+    public void equalsStatement(){
+        Statement s = rdf.createStatement(subject,predicate,object);
+        assertEquals(s,statement.getStatement());
     }
 
     @Test
     public void checkModel(){
         ModelBuilder graphBuilder = new ModelBuilder();
-        graphBuilder.add(state.getStateId(),rdf.createIRI(SignifierOntology.hasStatement),statementId);
         graphBuilder.add(statementId,rdf.createIRI(RDFSOntology.subject),subject);
         graphBuilder.add(statementId,rdf.createIRI(RDFSOntology.predicate),predicate);
         graphBuilder.add(statementId,rdf.createIRI(RDFSOntology.object),object);
         Model model = graphBuilder.build();
-        assertEquals(model,state.getModel());
+        assertEquals(model,statement.getModel());
     }
+
+
 }

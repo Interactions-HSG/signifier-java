@@ -1,3 +1,5 @@
+package org.hyperagents.ontologies;
+
 public class SignifierOntology {
 
     public static final String PREFIX="http://example.com/";
@@ -7,6 +9,8 @@ public class SignifierOntology {
     public static final String thisAgent = PREFIX + "thisAgent";
 
     public static final String thisSignifier = PREFIX + "thisSignifier";
+
+    public static final String Plan = PREFIX + "Plan";
 
     public static final String Affordance = PREFIX + "Affordance";
 
@@ -20,7 +24,11 @@ public class SignifierOntology {
 
     public static final String hasOption = PREFIX + "hasOption";
 
+    public static final String hasParallelAffordance = PREFIX + "hasParallelAffordance";
+
     public static final String hasSequence = PREFIX + "hasSequence";
+
+    public static final String hasPlan = PREFIX + "hasPlan";
 
     public static final String hasPrecondition = PREFIX + "hasPrecondition";
 

@@ -1,6 +1,11 @@
+package org.hyperagents.signifier;
+
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
+import org.hyperagents.affordance.Affordance;
+import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.util.RDFS;
 
 import java.io.ByteArrayOutputStream;
 import java.time.Instant;
