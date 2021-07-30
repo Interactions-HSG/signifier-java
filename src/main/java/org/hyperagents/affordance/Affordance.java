@@ -97,6 +97,12 @@ public class Affordance {
         if (creator != null){
             builder.setCreator(creator);
         }
+        Set<Resource> planIds = Models.objectResources(model.filter(newAffordanceId,
+                RDFS.rdf.createIRI(SignifierOntology.hasPlan), null));
+        for (Resource planId : planIds){
+            Plan.Builder planBuilder = new Plan.Builder(planId);
+            planBuilder.addModel(RDFS.retrieveBlock(planId, model));
+        }
         return builder.build();
     }
 
