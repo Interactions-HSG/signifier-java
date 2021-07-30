@@ -166,13 +166,13 @@ public class Affordance {
 
         public Builder addPlan(Plan plan){
             this.plans.add(plan);
-            graphBuilder.addPlan(plan);
+            graphBuilder.addPlan(affordanceId, plan);
             return this;
         }
 
         public Builder addPlans(Set<Plan> plans){
             this.plans.addAll(plans);
-            graphBuilder.addPlans(plans);
+            graphBuilder.addPlans(affordanceId, plans);
             return this;
         }
 
