@@ -158,13 +158,13 @@ public class Affordance {
             return this;
         }
 
-        public Affordance.Builder addPlan(Plan plan){
+        public Builder addPlan(Plan plan){
             this.plans.add(plan);
             graphBuilder.addPlan(plan);
             return this;
         }
 
-        public Affordance.Builder addPlans(Set<Plan> plans){
+        public Builder addPlans(Set<Plan> plans){
             this.plans.addAll(plans);
             graphBuilder.addPlans(plans);
             return this;
