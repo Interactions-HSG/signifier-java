@@ -1,6 +1,8 @@
 package org.hyperagents.util;
 
 import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.helpers.RDFHandlerWrapper;
 import org.hyperagents.affordance.Affordance;
 import org.hyperagents.ontologies.RDFSOntology;
 import org.eclipse.rdf4j.model.*;
@@ -11,6 +13,7 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,6 +23,12 @@ import java.util.Set;
 public class RDFS {
 
     public static ValueFactory rdf=SimpleValueFactory.getInstance();
+
+    public static String printModel(Model model){
+        OutputStream output = new ByteArrayOutputStream();
+        Rio.write(model, output, RDFFormat.TURTLE);
+        return output.toString();
+    }
 
     public static Model createList(Resource listId, List<Value> values) {
         Model m = new DynamicModelFactory().createEmptyModel();

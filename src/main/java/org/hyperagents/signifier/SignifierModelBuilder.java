@@ -2,14 +2,11 @@ package org.hyperagents.signifier;
 
 import org.hyperagents.affordance.Affordance;
 import org.hyperagents.ontologies.SignifierOntology;
-import org.hyperagents.util.Plan;
-import org.hyperagents.util.RDFS;
+import org.hyperagents.util.*;
 
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.hyperagents.util.ReifiedStatement;
-import org.hyperagents.util.State;
 
 import java.time.Instant;
 import java.util.Date;
@@ -60,6 +57,13 @@ public class SignifierModelBuilder extends ModelBuilder {
     public void addObjective(Resource affordanceId,State state){
         add(affordanceId,rdf.createIRI(SignifierOntology.hasObjective),state.getStateId());
         addState(state);
+    }
+
+    public void addCreator(Resource affordanceId, Creator creator){
+        add(affordanceId, rdf.createIRI(SignifierOntology.hasCreator), creator.getValue());
+        if (creator.getModel().isPresent()){
+            addModel(creator.getModel().get());
+        }
     }
 
     public void addOption(Resource resource, Affordance affordance){

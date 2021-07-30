@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.Models;
 import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.util.Creator;
 import org.hyperagents.util.Plan;
 import org.hyperagents.util.RDFS;
 import org.hyperagents.util.State;
@@ -16,8 +17,8 @@ import java.util.Vector;
 public class CompositeAffordance extends Affordance{
 
     private Set<Plan> plans;
-    protected CompositeAffordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Model model, Set<Plan> plans) {
-        super(affordanceId, precondition, objective, model);
+    protected CompositeAffordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Optional<Creator> creator, Model model, Set<Plan> plans) {
+        super(affordanceId, precondition, objective, creator, model);
         this.plans = plans;
     }
 
@@ -67,6 +68,26 @@ public class CompositeAffordance extends Affordance{
             this.plans = new HashSet<>();
         }
 
+        @Override
+        public Builder setPrecondition(State precondition){
+            this.precondition = Optional.of(precondition);
+            this.graphBuilder.addPrecondition(affordanceId,precondition);
+            return this;
+        }
+
+        @Override
+        public Builder setObjective(State objective){
+            this.objective = Optional.of(objective);
+            this.graphBuilder.addObjective(affordanceId,objective);
+            return this;
+        }
+
+        @Override
+        public Builder setCreator(Creator creator){
+            this.creator = Optional.of(creator);
+            return this;
+        }
+
         public Builder addPlan(Plan plan){
             this.plans.add(plan);
             graphBuilder.addPlan(plan);
@@ -80,7 +101,7 @@ public class CompositeAffordance extends Affordance{
         }
 
         public CompositeAffordance build(){
-            return new CompositeAffordance(affordanceId, precondition, objective, graphBuilder.build(), plans);
+            return new CompositeAffordance(affordanceId, precondition, objective, creator, graphBuilder.build(), plans);
         }
     }
 }

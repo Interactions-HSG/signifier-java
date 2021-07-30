@@ -1,7 +1,11 @@
 package affordance;
 
 import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.hyperagents.affordance.Affordance;
+import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.util.Creator;
 import org.hyperagents.util.ReifiedStatement;
 import org.hyperagents.util.State;
 import org.hyperagents.util.RDFS;
@@ -83,6 +87,54 @@ public class AffordanceTest {
         assertEquals(expected,actual);
 
     }
+
+    @Test
+    public void checkCreator(){
+        Value value = rdf.createLiteral("Jeremy Lemee");
+        Creator creator = new Creator.Builder(value).build();
+        Resource creatorAffordanceId = rdf.createBNode("creatorAffordance");
+        Affordance creatorAffordance = new Affordance.Builder(creatorAffordanceId)
+                .setCreator(creator)
+                .build();
+        ModelBuilder builder = new ModelBuilder();
+        builder.add(creatorAffordanceId, RDF.TYPE, rdf.createIRI(SignifierOntology.Affordance));
+        builder.add(creatorAffordanceId, rdf.createIRI(SignifierOntology.hasCreator), "Jeremy Lemee");
+        Model m = builder.build();
+        Affordance actualAffordance = Affordance.retrieveAffordance(creatorAffordanceId, m);
+        //System.out.println(RDFS.printModel(creatorAffordance.getModel()));
+        assertEquals(creatorAffordance.getCreator().get().getValue(), actualAffordance.getCreator().get().getValue());
+        assertEquals(creatorAffordance.getCreator().get().getModel(), actualAffordance.getCreator().get().getModel());
+        //assertEquals(creatorAffordance.getCreator(), actualAffordance.getCreator());
+        assertEquals(creatorAffordance.getModel(), actualAffordance.getModel());
+    }
+
+    @Test
+    public void checkComplexCreator(){
+        Value c = rdf.createBNode("creator");
+        Value value = rdf.createLiteral("Jeremy Lemee");
+        Model creatorModel = new ModelBuilder()
+                .add((Resource) c, rdf.createIRI("http://www.example.com/name"), value)
+                .build();
+        Creator creator = new Creator.Builder(c)
+                .addModel(creatorModel)
+                .build();
+        Resource creatorAffordanceId = rdf.createBNode("creatorAffordance");
+        Affordance creatorAffordance = new Affordance.Builder(creatorAffordanceId)
+                .setCreator(creator)
+                .build();
+        ModelBuilder builder = new ModelBuilder();
+        builder.add(creatorAffordanceId, RDF.TYPE, rdf.createIRI(SignifierOntology.Affordance));
+        builder.add(creatorAffordanceId, rdf.createIRI(SignifierOntology.hasCreator), c);
+        builder.add((Resource)c, rdf.createIRI("http://www.example.com/name"), value);
+        Model m = builder.build();
+        Affordance actualAffordance = Affordance.retrieveAffordance(creatorAffordanceId, m);
+        assertEquals(creatorAffordance.getCreator().get().getValue(), actualAffordance.getCreator().get().getValue());
+        assertEquals(creatorAffordance.getCreator().get().getModel(), actualAffordance.getCreator().get().getModel());
+        //assertEquals(creatorAffordance.getCreator(), actualAffordance.getCreator());
+        assertEquals(creatorAffordance.getModel(), actualAffordance.getModel());
+    }
+
+
 
 
 }
