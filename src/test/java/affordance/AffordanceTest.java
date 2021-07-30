@@ -5,10 +5,7 @@ import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.hyperagents.affordance.Affordance;
 import org.hyperagents.ontologies.SignifierOntology;
-import org.hyperagents.util.Creator;
-import org.hyperagents.util.ReifiedStatement;
-import org.hyperagents.util.State;
-import org.hyperagents.util.RDFS;
+import org.hyperagents.util.*;
 import org.hyperagents.ontologies.RDFSOntology;
 import org.hyperagents.signifier.SignifierModelBuilder;
 import org.junit.Before;
@@ -19,6 +16,7 @@ public class AffordanceTest {
     ValueFactory rdf;
     State precondition;
     State objective;
+    Plan plan;
     Affordance affordance;
 
     @Before
@@ -39,9 +37,24 @@ public class AffordanceTest {
         Resource affordanceId = rdf.createBNode("affordance");
         IRI property = rdf.createIRI("https://example.com/number");
         Literal l = rdf.createLiteral(30);
+        Resource affordance1Id = rdf.createBNode("affordance1");
+        Affordance affordance1 = new Affordance.Builder(affordance1Id)
+                .setPrecondition(precondition)
+                .setObjective(objective)
+                .add(rdf.createIRI("https://example.com/name"), rdf.createLiteral("affordance1"))
+                .build();
+        Resource affordance2Id = rdf.createBNode("affordance2");
+        Affordance affordance2 = new Affordance.Builder(affordance2Id)
+                .setPrecondition(precondition)
+                .setObjective(objective)
+                .add(rdf.createIRI("https://example.com/name"), rdf.createLiteral("affordance2"))
+                .build();
+        Resource planId = rdf.createBNode("plan");
+        plan = new ChoicePlan.Builder(planId).addOption(affordance1).addOption(affordance2).build();
         affordance = new Affordance.Builder(affordanceId)
                 .setPrecondition(precondition)
                 .setObjective(objective)
+                .addPlan(plan)
                 .add(property,l)
                 .build();
     }
@@ -132,6 +145,11 @@ public class AffordanceTest {
         assertEquals(creatorAffordance.getCreator().get().getModel(), actualAffordance.getCreator().get().getModel());
         //assertEquals(creatorAffordance.getCreator(), actualAffordance.getCreator());
         assertEquals(creatorAffordance.getModel(), actualAffordance.getModel());
+    }
+
+    @Test
+    public void checkPlan(){
+        assertEquals(plan, affordance.getFirstPlan());
     }
 
 

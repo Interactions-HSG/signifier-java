@@ -4,12 +4,16 @@ import org.hyperagents.io.SignifierWriter;
 import org.hyperagents.ontologies.SignifierOntology;
 import org.hyperagents.signifier.SignifierModelBuilder;
 import org.hyperagents.util.Creator;
+import org.hyperagents.util.Plan;
 import org.hyperagents.util.State;
 import org.hyperagents.util.RDFS;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.Vector;
 
 public class Affordance {
 
@@ -18,14 +22,16 @@ public class Affordance {
     private Optional<State> precondition;
     private Optional<State> objective;
     private Optional<Creator> creator;
+    private Set<Plan> plans;
 
     private Model model;
 
-    protected Affordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Optional<Creator> creator, Model model){
+    protected Affordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Optional<Creator> creator, Set<Plan> plans, Model model){
         this.affordanceId = affordanceId;
         this.precondition = precondition;
         this.objective = objective;
         this.creator = creator;
+        this.plans = plans;
         this.model = model;
     }
 
@@ -38,6 +44,10 @@ public class Affordance {
     public Optional<State> getObjective(){ return objective; }
 
     public Optional<Creator> getCreator(){ return creator; };
+
+    public Set<Plan> getPlans(){ return plans; }
+
+    public Plan getFirstPlan(){ return new Vector<Plan>(plans).firstElement(); }
 
     public Model getModel(){
         return model;
@@ -97,6 +107,7 @@ public class Affordance {
         protected Optional<State> precondition;
         protected Optional<State> objective;
         protected Optional<Creator> creator;
+        protected Set<Plan> plans;
         protected SignifierModelBuilder graphBuilder;
         protected ValueFactory rdf;
 
@@ -105,6 +116,7 @@ public class Affordance {
             this.precondition = Optional.empty();
             this.objective = Optional.empty();
             this.creator = Optional.empty();
+            this.plans = new HashSet<>();
             this.graphBuilder = new SignifierModelBuilder();
             this.rdf=RDFS.rdf;
         }
@@ -146,9 +158,21 @@ public class Affordance {
             return this;
         }
 
+        public Affordance.Builder addPlan(Plan plan){
+            this.plans.add(plan);
+            graphBuilder.addPlan(plan);
+            return this;
+        }
+
+        public Affordance.Builder addPlans(Set<Plan> plans){
+            this.plans.addAll(plans);
+            graphBuilder.addPlans(plans);
+            return this;
+        }
+
         public Affordance build(){
             graphBuilder.addType(affordanceId, rdf.createIRI(SignifierOntology.Affordance));
-            return new Affordance(affordanceId, precondition, objective, creator, graphBuilder.build());
+            return new Affordance(affordanceId, precondition, objective, creator, plans, graphBuilder.build());
         }
     }
 }

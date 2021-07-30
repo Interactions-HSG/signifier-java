@@ -1,6 +1,7 @@
 package org.hyperagents.affordance;
 
 import org.hyperagents.util.Creator;
+import org.hyperagents.util.Plan;
 import org.hyperagents.util.State;
 import ch.unisg.ics.interactions.wot.td.affordances.InteractionAffordance;
 import org.eclipse.rdf4j.model.Model;
@@ -8,13 +9,14 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
 
 import java.util.Optional;
+import java.util.Set;
 
 public class HypermediaAffordance extends Affordance {
 
     private Optional<InteractionAffordance> interactionAffordance;
 
-    protected HypermediaAffordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Optional<Creator> creator, Model model, Optional<InteractionAffordance> interactionAffordance) {
-        super(affordanceId, precondition, objective, creator, model);
+    protected HypermediaAffordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Optional<Creator> creator, Set<Plan> plans, Model model, Optional<InteractionAffordance> interactionAffordance) {
+        super(affordanceId, precondition, objective, creator, plans, model);
         this.interactionAffordance = interactionAffordance;
     }
 
@@ -47,7 +49,7 @@ public class HypermediaAffordance extends Affordance {
         }
 
             public HypermediaAffordance build(){
-                return new HypermediaAffordance(affordanceId, precondition, objective, creator, graphBuilder.build(), interactionAffordance);
+                return new HypermediaAffordance(affordanceId, precondition, objective, creator, plans, graphBuilder.build(), interactionAffordance);
             }
         }
 
