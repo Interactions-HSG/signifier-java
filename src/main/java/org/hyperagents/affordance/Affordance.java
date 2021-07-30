@@ -102,9 +102,13 @@ public class Affordance {
         for (Resource planId : planIds){
             Plan.Builder planBuilder = new Plan.Builder(planId);
             planBuilder.addModel(RDFS.retrieveBlock(planId, model));
+            Plan plan = planBuilder.build();
+            builder.addPlan(plan);
         }
         return builder.build();
     }
+
+
 
 
 
