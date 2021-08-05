@@ -3,7 +3,6 @@ import org.hyperagents.io.SignifierReader;
 import org.hyperagents.io.SignifierWriter;
 import org.hyperagents.ontologies.SignifierOntology;
 import org.hyperagents.signifier.SignifierModelBuilder;
-import org.hyperagents.util.Creator;
 import org.hyperagents.util.Plan;
 import org.hyperagents.util.State;
 import org.hyperagents.util.RDFS;
@@ -21,16 +20,14 @@ public class Affordance {
 
     private Optional<State> precondition;
     private Optional<State> objective;
-    private Optional<Creator> creator;
     private Set<Plan> plans;
 
     private Model model;
 
-    protected Affordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Optional<Creator> creator, Set<Plan> plans, Model model){
+    protected Affordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Set<Plan> plans, Model model){
         this.affordanceId = affordanceId;
         this.precondition = precondition;
         this.objective = objective;
-        this.creator = creator;
         this.plans = plans;
         this.model = model;
     }
@@ -42,8 +39,6 @@ public class Affordance {
     public Optional<State> getPrecondition() { return precondition; }
 
     public Optional<State> getObjective(){ return objective; }
-
-    public Optional<Creator> getCreator(){ return creator; };
 
     public Set<Plan> getPlans(){ return plans; }
 
@@ -93,10 +88,6 @@ public class Affordance {
             State objective = State.retrieveState(objectiveId.get(),m);
             builder.setObjective(objective);
         }
-        Creator creator = Creator.getCreator(newAffordanceId, model);
-        if (creator != null){
-            builder.setCreator(creator);
-        }
         Set<Resource> planIds = Models.objectResources(model.filter(newAffordanceId,
                 RDFS.rdf.createIRI(SignifierOntology.hasPlan), null));
         for (Resource planId : planIds){
@@ -116,7 +107,6 @@ public class Affordance {
         protected Resource affordanceId;
         protected Optional<State> precondition;
         protected Optional<State> objective;
-        protected Optional<Creator> creator;
         protected Set<Plan> plans;
         protected SignifierModelBuilder graphBuilder;
         protected ValueFactory rdf;
@@ -125,7 +115,6 @@ public class Affordance {
             this.affordanceId = affordanceId;
             this.precondition = Optional.empty();
             this.objective = Optional.empty();
-            this.creator = Optional.empty();
             this.plans = new HashSet<>();
             this.graphBuilder = new SignifierModelBuilder();
             this.rdf=RDFS.rdf;
@@ -140,12 +129,6 @@ public class Affordance {
         public Builder setObjective(State objective){
             this.objective = Optional.of(objective);
             this.graphBuilder.addObjective(affordanceId,objective);
-            return this;
-        }
-
-        public Builder setCreator(Creator creator){
-            this.creator = Optional.of(creator);
-            this.graphBuilder.addCreator(affordanceId, creator);
             return this;
         }
 
@@ -182,7 +165,7 @@ public class Affordance {
 
         public Affordance build(){
             graphBuilder.addType(affordanceId, rdf.createIRI(SignifierOntology.Affordance));
-            return new Affordance(affordanceId, precondition, objective, creator, plans, graphBuilder.build());
+            return new Affordance(affordanceId, precondition, objective, plans, graphBuilder.build());
         }
     }
 }

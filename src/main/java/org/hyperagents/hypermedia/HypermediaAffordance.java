@@ -1,6 +1,6 @@
-package org.hyperagents.affordance;
+package org.hyperagents.hypermedia;
 
-import org.hyperagents.util.Creator;
+import org.hyperagents.affordance.Affordance;
 import org.hyperagents.util.Plan;
 import org.hyperagents.util.State;
 import ch.unisg.ics.interactions.wot.td.affordances.InteractionAffordance;
@@ -15,8 +15,9 @@ public class HypermediaAffordance extends Affordance {
 
     private Optional<InteractionAffordance> interactionAffordance;
 
-    protected HypermediaAffordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Optional<Creator> creator, Set<Plan> plans, Model model, Optional<InteractionAffordance> interactionAffordance) {
-        super(affordanceId, precondition, objective, creator, plans, model);
+
+    protected HypermediaAffordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Set<Plan> plans, Model model, Optional<InteractionAffordance> interactionAffordance) {
+        super(affordanceId, precondition, objective, plans, model);
         this.interactionAffordance = interactionAffordance;
     }
 
@@ -49,7 +50,7 @@ public class HypermediaAffordance extends Affordance {
         }
 
             public HypermediaAffordance build(){
-                return new HypermediaAffordance(affordanceId, precondition, objective, creator, plans, graphBuilder.build(), interactionAffordance);
+                return new HypermediaAffordance(affordanceId, precondition, objective, plans, graphBuilder.build(), interactionAffordance);
             }
         }
 

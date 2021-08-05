@@ -101,7 +101,7 @@ public class AffordanceTest {
 
     }
 
-    @Test
+    /*@Test
     public void checkCreator(){
         Value value = rdf.createLiteral("Jeremy Lemee");
         Creator creator = new Creator.Builder(value).build();
@@ -145,7 +145,7 @@ public class AffordanceTest {
         assertEquals(creatorAffordance.getCreator().get().getModel(), actualAffordance.getCreator().get().getModel());
         //assertEquals(creatorAffordance.getCreator(), actualAffordance.getCreator());
         assertEquals(creatorAffordance.getModel(), actualAffordance.getModel());
-    }
+    }*/
 
     @Test
     public void checkPlan(){

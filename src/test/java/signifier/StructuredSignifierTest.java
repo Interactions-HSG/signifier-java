@@ -59,8 +59,8 @@ public class StructuredSignifierTest {
         builder.addAffordance(signifierId,affordance);
         model = builder.build();
         signifier = new Signifier.Builder(signifierId)
-                .addExpirationDate(expirationDate)
-                .addSalience(10)
+                .setExpirationDate(expirationDate)
+                .setSalience(10)
                 .addAffordance(affordance)
                 .build();
         structuredSignifier = StructuredSignifier.getAsStructuredSignifier(signifier);

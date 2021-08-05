@@ -6,6 +6,7 @@ import org.hyperagents.affordance.Affordance;
 import org.hyperagents.io.SignifierReader;
 import org.hyperagents.io.SignifierWriter;
 import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.util.Creator;
 import org.hyperagents.util.RDFS;
 
 import java.time.Instant;
@@ -18,14 +19,16 @@ public class StructuredSignifier {
     private Resource signifierId;
     private Optional<Instant> expirationDate;
     private Optional<Integer> salience;
+    private Optional<Creator> creator;
     private Set<Affordance> affordances;
     private Model triples;
 
     protected StructuredSignifier(Resource signifierId, Optional<Instant> expirationDate, Optional<Integer> salience,
-                                  Set<Affordance> affordances, Model triples){
+                                  Optional<Creator> creator, Set<Affordance> affordances, Model triples){
         this.signifierId=signifierId;
         this.expirationDate=expirationDate;
         this.salience=salience;
+        this.creator = creator;
         this.affordances=affordances;
         this.triples=triples;
     }
@@ -37,6 +40,8 @@ public class StructuredSignifier {
     public Optional<Integer> getSalience(){
         return salience;
     }
+
+    public Optional<Creator> getCreator() { return creator; }
 
     public Set<Affordance> getAffordances(){
         return affordances;
@@ -70,6 +75,10 @@ public class StructuredSignifier {
             Literal salience = optionalSalience.get();
             builder.setSalience(salience.intValue());
         }
+        Creator creator = Creator.getCreator(signifierId, model);
+        if (creator != null){
+            builder.setCreator(creator);
+        }
         Set<Resource> affordanceIds = Models.objectResources(model.filter(signifierId,RDFS.rdf.createIRI(SignifierOntology.hasAffordance),null));
         for (Resource aId : affordanceIds){
             Affordance a = Affordance.retrieveAffordance(aId,model);
@@ -95,6 +104,7 @@ public class StructuredSignifier {
         private Resource signifierId;
         private Optional<Instant> expirationDate;
         private Optional<Integer> salience;
+        private Optional<Creator> creator;
         private Set<Affordance> affordances;
         private SignifierModelBuilder graphBuilder;
 
@@ -102,6 +112,7 @@ public class StructuredSignifier {
             this.signifierId=signifierId;
             this.expirationDate=Optional.empty();
             this.salience=Optional.empty();
+            this.creator = Optional.empty();
             this.affordances=new HashSet<>();
             this.graphBuilder=new SignifierModelBuilder();
         }
@@ -125,6 +136,12 @@ public class StructuredSignifier {
             return this;
         }
 
+        public Builder setCreator(Creator c){
+            this.creator = Optional.of(c);
+            this.graphBuilder.addCreator(signifierId, c);
+            return this;
+        }
+
         public Builder addAffordance(Affordance affordance){
             this.affordances.add(affordance);
             this.graphBuilder.add(signifierId,RDFS.rdf.createIRI(SignifierOntology.hasAffordance),affordance.getAffordanceId());
@@ -141,7 +158,7 @@ public class StructuredSignifier {
         }
 
         public StructuredSignifier build(){
-            return new StructuredSignifier(signifierId,expirationDate,salience, affordances, graphBuilder.build());
+            return new StructuredSignifier(signifierId,expirationDate,salience, creator, affordances, graphBuilder.build());
         }
 
     }
