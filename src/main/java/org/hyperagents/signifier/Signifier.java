@@ -45,7 +45,7 @@ public class Signifier {
 
     public Set<Affordance> getAffordances() { return affordances; }
 
-    public List<Affordance> getAffordanceList() { return new Vector<>(affordances); }
+    public List<Affordance> getAffordanceList() { return new ArrayList<>(affordances); }
 
     public Model getModel(){
         return model;
