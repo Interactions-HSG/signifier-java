@@ -63,7 +63,8 @@ public class Signifier {
 
     public static Signifier readSignifier(Resource signifierId,Model m){
         System.out.println("initial model: "+m);
-        Model model = SignifierReader.getBlock(signifierId,m);
+        //Model model = SignifierReader.getBlock(signifierId,m);
+        Model model = SignifierReader.retrieveBlock(signifierId, m);
         System.out.println("new model: "+model);
         Signifier.Builder builder = new Signifier.Builder(signifierId);
         Optional<Literal> optionalExpirationDate = Models.objectLiteral(model.filter(signifierId, RDFS.rdf.createIRI(SignifierOntology.hasExpirationDate), null));

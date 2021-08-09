@@ -61,6 +61,24 @@ public class SignifierReader {
 
         }
 
+        public static Model retrieveBlock(Resource blockId, Model model){
+        Model m = new ModelBuilder().build();
+        int l1 = m.size();
+        m.addAll(model.filter(blockId, null, null));
+        int l2 = m.size();
+        while (l1 < l2){
+            l1 = l2;
+            Set<Resource> newResources  = Models.objectResources(m);
+            for (Resource resourceId : newResources){
+                m.addAll(model.filter(resourceId, null, null));
+            }
+            l2 = m.size();
+        }
+        return m;
+        }
+
+
+
 
 
 
