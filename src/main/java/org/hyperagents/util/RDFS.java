@@ -115,6 +115,24 @@ public class RDFS {
         return list;
     }
 
+    public static List<Literal> readLiteralList(Resource resourceId,Model model){
+        List<Literal> list = new ArrayList<>();
+        Resource currentId = resourceId;
+        while (!currentId.equals(rdf.createIRI(RDFSOntology.nil))){
+            Optional<Literal> value = Models.objectLiteral(model.filter(currentId,rdf.createIRI(RDFSOntology.first),null));
+            value.ifPresent(list::add);
+            Optional<Resource> newResourceId = Models.objectResource(model.filter(currentId,rdf.createIRI(RDFSOntology.rest),null));
+            if (newResourceId.isPresent()){
+                currentId = newResourceId.get();
+            }
+            else{
+                return list;
+            }
+
+        }
+        return list;
+    }
+
     public static void readBlock(Resource blockId, Model model, Model newModel) {
         Model m = model.filter(blockId, null, null);
         newModel.addAll(m);
