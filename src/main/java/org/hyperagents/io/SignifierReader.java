@@ -66,6 +66,8 @@ public class SignifierReader {
         int l1 = m.size();
         m.addAll(model.filter(blockId, null, null));
         int l2 = m.size();
+        System.out.println("l1: "+l1);
+        System.out.println("l2: "+l2);
         while (l1 < l2){
             l1 = l2;
             Set<Resource> newResources  = Models.objectResources(m);
@@ -73,6 +75,7 @@ public class SignifierReader {
                 m.addAll(model.filter(resourceId, null, null));
             }
             l2 = m.size();
+            System.out.println("new l2: "+l2);
         }
         return m;
         }
