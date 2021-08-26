@@ -1,37 +1,44 @@
 package org.hyperagents.hypermedia;
 
-import ch.unisg.ics.interactions.wot.td.affordances.Form;
-import ch.unisg.ics.interactions.wot.td.clients.TDHttpRequest;
-import ch.unisg.ics.interactions.wot.td.schemas.ArraySchema;
-import ch.unisg.ics.interactions.wot.td.schemas.DataSchema;
-import ch.unisg.ics.interactions.wot.td.schemas.ObjectSchema;
-import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.eclipse.rdf4j.model.util.Models;
 import org.hyperagents.util.Plan;
+import org.hyperagents.util.RDFS;
 
-import java.net.http.HttpHeaders;
-import java.net.http.HttpRequest;
 import java.util.*;
 
 public class HypermediaPlan extends Plan {
-    String operationType;
-    Form form;
-    Map<String, String> headers;
-    Optional<String> payload;
-    Optional<DataSchema> payloadSchema;
+    String url;
+    private String method;
+    private Set<String> operationTypes;
+    private Map<String, String> headers;
+    private Optional<String> payload;
 
-
-
-
-    protected HypermediaPlan(Resource planId, String operationType, Form form, Map<String, String> headers, Optional<String> payload, Optional<DataSchema> payloadSchema, Model model) {
-        super(planId, model);
-        this.operationType = operationType;
-        this.form = form;
+    protected HypermediaPlan(Resource planId, String url, String method, Set<String> operationTypes,
+                             Map<String, String> headers,Optional<String> payload){
+        super(planId, createModel(planId, url, method, operationTypes, headers, payload));
+        this.url = url;
+        this.method = method;
+        this.operationTypes = operationTypes;
         this.headers = headers;
         this.payload = payload;
-        this.payloadSchema = payloadSchema;
     }
+
+    public String getUrl(){
+        return url;
+    }
+
+    public String getMethod(){
+        return method;
+    }
+
+    public Set<String> getOperationTypes(){
+        return operationTypes;
+    }
+
 
 
     public Map<String, String> getHeaders(){
@@ -42,116 +49,113 @@ public class HypermediaPlan extends Plan {
         return payload;
     }
 
-    public Optional<DataSchema> getPayloadSchema(){
-        return payloadSchema;
-    }
-
-    public TDHttpRequest createRequest(){
-        TDHttpRequest request = new TDHttpRequest(form, operationType);
-        for (String key : headers.keySet()){
-            request.addHeader(key, headers.get(key));
+    public static Model createModel(Resource planId, String url, String method, Set<String> operationTypes,
+                             Map<String, String> headers,Optional<String> payload){
+        HypermediaModelBuilder builder = new HypermediaModelBuilder();
+        builder.addHypermediaPlan(planId);
+        builder.addUrl(planId, url);
+        for (String operationType : operationTypes) {
+            builder.addOperationType(planId, operationType);
         }
-        setPayload(request);
-        return request;
-
-    }
-
-    private void setPayload(TDHttpRequest request){
-        if (payload.isPresent() && payloadSchema.isPresent()){
-            String payloadString = payload.get();
-            DataSchema schema = payloadSchema.get();
-            if (schema.getDatatype().equals(DataSchema.BOOLEAN)){
-                boolean b = getBooleanPayload(payloadString);
-                request.setPrimitivePayload(schema, b);
-
-            }
-            else if (schema.getDatatype().equals(DataSchema.INTEGER)){
-                int n = getIntegerPayload(payloadString);
-                request.setPrimitivePayload(schema,n);
-
-            }
-            else if (schema.getDatatype().equals(DataSchema.STRING)){
-                request.setPrimitivePayload(schema, payloadString);
-
-            }
-            else if (schema.getDatatype().equals(DataSchema.NUMBER)){
-                double n = getNumberPayload(payloadString);
-                request.setPrimitivePayload(schema, n);
-
-
-            }
-            else if (schema.getDatatype().equals(DataSchema.ARRAY)){
-                List<Object> objects = getArrayPayload(payloadString);
-                request.setArrayPayload((ArraySchema)schema, objects);
-
-            }
-            else if (schema.getDatatype().equals(DataSchema.OBJECT)){
-                Map<String, Object> map = getObjectPayload(payloadString);
-                request.setObjectPayload((ObjectSchema) schema, map);
-
-            }
-            else if (schema.getDatatype().equals(DataSchema.NULL)){
-
-            }
+        builder.setMethod(planId, method);
+        Set<Header> headerSet = retrieveHeaders(headers);
+        for (Header h: headerSet){
+            builder.addHeader(planId, h);
         }
+        if (payload.isPresent()){
+            builder.setPayload(planId, payload.get());
+        }
+        Model model = builder.build();
+        return model;
 
     }
 
-    public boolean getBooleanPayload(String payload){
-        return Boolean.getBoolean(payload);
+    public static Set<Header> retrieveHeaders(Map<String, String> headers){
+        Set<Header> headerSet =  new HashSet<>();
+        Set<String> keySet = headers.keySet();
+        for (String key: keySet){
+            String value = headers.get(key);
+            Header h = new Header(key, value);
+            headerSet.add(h);
+        }
+        return headerSet;
     }
 
-    public int getIntegerPayload(String payload){
-        return Integer.getInteger(payload);
+    public static HypermediaPlan retrieveHypermediaPlan(Resource planId, Model model){
+        Optional<Literal> opUrlLiteral = Models.objectLiteral(model.filter(planId,
+                RDFS.rdf.createIRI(HypermediaOntology.hasUrl),null));
+        Optional<Literal> opMethodLiteral = Models.objectLiteral(model.filter(planId,
+                RDFS.rdf.createIRI(HypermediaOntology.hasMethod),null));
+        if (opUrlLiteral.isPresent() && opMethodLiteral.isPresent()){
+            String url = opUrlLiteral.get().stringValue();
+            Literal methodLiteral = opMethodLiteral.get();
+            String method = methodLiteral.stringValue();
+            HypermediaPlan.Builder builder = new HypermediaPlan.Builder(planId, url, method);
+            Set<Literal> operationTypeLiterals = Models.objectLiterals(model.filter(
+                    planId, RDFS.rdf.createIRI(HypermediaOntology.hasOperationType),null
+            ));
+            for (Literal l : operationTypeLiterals){
+                String operationType = l.stringValue();
+                builder.addOperationType(operationType);
+            }
+            Set<Resource> headerIds = Models.objectResources(model.filter(
+                    planId, RDFS.rdf.createIRI(HypermediaOntology.hasHeader), null
+            ));
+            for (Resource headerId : headerIds){
+                Header h = Header.retrieveHeader(headerId, model);
+                builder.addHeader(h);
+            }
+            Optional<Literal> opPayloadLiteral = Models.objectLiteral(model.filter(
+                    planId, RDFS.rdf.createIRI(HypermediaOntology.hasPayload),null
+            ));
+            if (opPayloadLiteral.isPresent()){
+                String payload = opPayloadLiteral.get().stringValue();
+                builder.setPayload(payload);
+            }
+            return builder.build();
+        }
+        return null;
     }
 
-    public double getNumberPayload(String payload){
-        return Double.parseDouble(payload);
-    }
-
-    public List<Object> getArrayPayload(String payload){
-        List<Object> objects = new ArrayList<>();
-        return objects;
-    }
-
-    public Map<String, Object> getObjectPayload(String payload){
-        Map<String, Object> map = new HashMap<>();
-        return map;
+    public static HypermediaPlan getAsHypermediaPlan(Plan p){
+        return retrieveHypermediaPlan(p.getPlanId(), p.getModel());
     }
 
     public static class Builder extends Plan.Builder {
-        String operationType;
-        Form form;
-        Map<String, String> headers;
-        Optional<String> payload;
-        Optional<DataSchema> payloadSchema;
+        private String url;
+        private String method;
+        private Set<String> operationTypes;
+        private Map<String, String> headers;
+        private Optional<String> payload;
 
-        public Builder(Resource planId, String operationType, Form form) {
+        public Builder(Resource planId, String url, String method) {
             super(planId);
-            this.operationType = operationType;
-            this.form = form;
-            headers = new HashMap<>();
-            payload = Optional.empty();
-            payloadSchema = Optional.empty();
+            this.url = url;
+            this.method = method;
+            this.operationTypes = new HashSet<>();
+            this.headers = new HashMap<>();
+            this.payload = Optional.empty();
+
         }
 
-        public Builder addHeader(String key, String value){
-            this.headers.put(key, value);
+        public Builder addOperationType(String operationType){
+            this.operationTypes.add(operationType);
             return this;
         }
 
-        public Builder addPayload(String payload){
-            this.payload = Optional.of(payload);
+        public Builder addHeader(Header h){
+            this.headers.put(h.getName(), h.getValue());
             return this;
+
         }
 
-        public Builder addPayloadSchema(DataSchema payloadSchema){
-            this.payloadSchema = Optional.of(payloadSchema);
+        public Builder setPayload(String p){
+            this.payload = Optional.of(p);
             return this;
         }
 
         public HypermediaPlan build(){
-            return new HypermediaPlan(planId, operationType, form, headers, payload, payloadSchema, modelBuilder.build());
+            return new HypermediaPlan(planId, url, method, operationTypes, headers, payload);
         }
     }
 }

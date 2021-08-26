@@ -17,10 +17,13 @@ public class State {
 
     private Set<ReifiedStatement> statements;
 
+    private Set<ReifiedStatement> falseStatements;
 
-    protected State(Resource stateId, Set<ReifiedStatement> statements) {
+
+    protected State(Resource stateId, Set<ReifiedStatement> statements, Set<ReifiedStatement> falseStatements) {
         this.stateId = stateId;
         this.statements = statements;
+        this.falseStatements = falseStatements;
     }
 
     public Resource getStateId() {
@@ -36,10 +39,21 @@ public class State {
 
     }
 
+    public Set<ReifiedStatement> getFalseStatements(){
+        return falseStatements;
+    }
+
+    public List<ReifiedStatement> getFalseStatementList(){
+        return new ArrayList<>(falseStatements);
+    }
+
    public Model getModel(){
         SignifierModelBuilder builder = new SignifierModelBuilder();
         for (ReifiedStatement statement : statements) {
             builder.addReifiedStatement(stateId, statement);
+        }
+        for (ReifiedStatement statement : falseStatements){
+            builder.addFalseReifiedStatement(stateId, statement);
         }
         return builder.build();
    }
@@ -59,6 +73,12 @@ public class State {
 
                 builder.addStatement(s);
             }
+        Set<Resource> notStatementIds = Models.objectResources(model.filter(stateId, RDFS.rdf.createIRI(SignifierOntology.hasNotStatement), null));
+        for (Resource notStatementId : notStatementIds){
+            ReifiedStatement s = ReifiedStatement.readReifiedStatement(notStatementId,model);
+            builder.addFalseStatement(s);
+
+        }
         return builder.build();
 
         }
@@ -66,10 +86,12 @@ public class State {
     public static class Builder{
         private Resource stateId;
         private Set<ReifiedStatement> statements;
+        private Set<ReifiedStatement> falseStatements;
 
         public Builder(Resource stateId){
             this.stateId=stateId;
             this.statements=new HashSet<>();
+            this.falseStatements = new HashSet<>();
         }
 
         public Builder addStatement(ReifiedStatement s){
@@ -77,10 +99,15 @@ public class State {
             return this;
         }
 
+        public Builder addFalseStatement(ReifiedStatement s){
+            this.falseStatements.add(s);
+            return this;
+        }
+
 
 
         public State build(){
-            return new State(stateId,statements);
+            return new State(stateId,statements, falseStatements);
         }
     }
 }

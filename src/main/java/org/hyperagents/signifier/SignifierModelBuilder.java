@@ -45,6 +45,12 @@ public class SignifierModelBuilder extends ModelBuilder {
         addReifiedStatement(statement);
     }
 
+    public void addFalseReifiedStatement(Resource stateId, ReifiedStatement statement){
+        this.add(stateId, rdf.createIRI(SignifierOntology.hasNotStatement),statement.getStatementId());
+        addReifiedStatement(statement);
+
+    }
+
     public void addState(State state){
         addModel(state.getModel());
     }

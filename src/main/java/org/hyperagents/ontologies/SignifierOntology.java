@@ -40,6 +40,8 @@ public class SignifierOntology {
 
     public static final String hasStatement = PREFIX + "hasStatement";
 
+    public static final String hasNotStatement = PREFIX + "hasNotStatement";
+
     public static final String hasExpirationDate = PREFIX + "hasExpirationDate";
 
     public static final String hasSalience = PREFIX + "hasSalience";
