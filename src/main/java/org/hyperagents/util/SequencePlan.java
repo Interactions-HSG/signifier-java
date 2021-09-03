@@ -45,7 +45,7 @@ public class SequencePlan extends Plan {
                 RDFS.rdf.createIRI(SignifierOntology.hasSequence),null));
         if (optionalResource.isPresent()){
             Resource sequenceId = optionalResource.get();
-            List<Resource> list = RDFS.readResourceList(sequenceId, model);
+            List<Resource> list = RDFS.readResourceSeq(sequenceId, model);
             for (Resource id : list){
                 Affordance affordance = Affordance.retrieveAffordance(id, model);
                 affordances.add(affordance);

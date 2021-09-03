@@ -28,10 +28,15 @@ public class SignifierModelBuilder extends ModelBuilder {
         addModel(m);
     }
 
+    public void addSeq(Resource seqId, List<Affordance> list){
+        Model m = RDFS.createAffordanceSeq(seqId, list);
+        addModel(m);
+    }
+
     public void addSequence(Resource planId, List<Affordance> sequence){
         Resource sequenceId =rdf.createBNode();
         add(planId, rdf.createIRI(SignifierOntology.hasSequence), sequenceId);
-        addList(sequenceId, sequence);
+        addSeq(sequenceId, sequence);
     }
 
 

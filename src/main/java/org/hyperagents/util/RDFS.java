@@ -97,24 +97,66 @@ public class RDFS {
         return list;
     }
 
+    public static IRI createPredicate(int i){
+        String iriString = "http://www.w3.org/1999/02/22-rdf-syntax-ns#_"+i;
+        IRI iri = rdf.createIRI(iriString);
+        return iri;
+    }
+
     public static List<Value> readSeq(Resource resourceId,Model model){
         List<Value> list = new ArrayList<>();
-        Resource currentId = resourceId;
-        while (!currentId.equals(rdf.createIRI(RDFSOntology.nil))){
-            Optional<Value> value = Models.object(model.filter(currentId,rdf.createIRI(RDFSOntology.first),null));
-            if (value.isPresent()){
-                list.add(value.get());
+        int i = 1;
+        boolean b =true;
+        while(b){
+            Optional<Value> optionalValue = Models.object(model.filter(resourceId, createPredicate(i),null));
+            if (optionalValue.isPresent()){
+                Value value = optionalValue.get();
+                list.add(value);
+                i = i + 1;
             }
-            Optional<Resource> newResourceId = Models.objectResource(model.filter(currentId,rdf.createIRI(RDFSOntology.rest),null));
-            if (newResourceId.isPresent()){
-                currentId = newResourceId.get();
+            else {
+                b = false;
             }
-            else{
-                return list;
-            }
-
         }
         return list;
+
+    }
+
+    public static List<Resource> readResourceSeq(Resource resourceId,Model model){
+        List<Resource> list = new ArrayList<>();
+        int i = 1;
+        boolean b =true;
+        while(b){
+            Optional<Resource> optionalResource = Models.objectResource(model.filter(resourceId, createPredicate(i),null));
+            if (optionalResource.isPresent()){
+                Resource resource = optionalResource.get();
+                list.add(resource);
+                i = i + 1;
+            }
+            else {
+                b = false;
+            }
+        }
+        return list;
+
+    }
+
+    public static Model createSeq(Resource seqId, List<Value> values) {
+        Model m = new DynamicModelFactory().createEmptyModel();
+        for (int i = 0; i<values.size();i++){
+            m.add(seqId, createPredicate(i), values.get(i));
+        }
+        return m;
+    }
+
+    public static Model createAffordanceSeq(Resource seqId, List<Affordance> list) {
+        Model m = new DynamicModelFactory().createEmptyModel();
+        for (int i = 0;i<list.size();i++){
+            Affordance a = list.get(i);
+            m.add(seqId, createPredicate(i), a.getId());
+            m.addAll(a.getModel());
+        }
+        return m;
     }
 
     public static List<Resource> readResourceList(Resource resourceId,Model model){
