@@ -51,17 +51,26 @@ public class SignifierModelBuilder extends ModelBuilder {
 
     }
 
+    public void defineState(Resource stateId){
+        add(stateId, RDF.TYPE, rdf.createIRI(SignifierOntology.State));
+    }
+
     public void addState(State state){
         addModel(state.getModel());
     }
 
     public void addPrecondition(Resource affordanceId,State state){
-        add(affordanceId,rdf.createIRI(SignifierOntology.hasPrecondition),state.getStateId());
+        add(affordanceId,rdf.createIRI(SignifierOntology.hasPrecondition),state.getId());
+        addState(state);
+    }
+
+    public void addPostcondition(Resource affordanceId, State state){
+        add(affordanceId, rdf.createIRI(SignifierOntology.hasPostcondition), state.getId());
         addState(state);
     }
 
     public void addObjective(Resource affordanceId,State state){
-        add(affordanceId,rdf.createIRI(SignifierOntology.hasObjective),state.getStateId());
+        add(affordanceId,rdf.createIRI(SignifierOntology.hasObjective),state.getId());
         addState(state);
     }
 
@@ -73,7 +82,7 @@ public class SignifierModelBuilder extends ModelBuilder {
     }
 
     public void addOption(Resource resource, Affordance affordance){
-        add(resource,rdf.createIRI(SignifierOntology.hasOption),affordance.getAffordanceId());
+        add(resource,rdf.createIRI(SignifierOntology.hasOption),affordance.getId());
         addAffordance(affordance);
     }
 
@@ -84,7 +93,7 @@ public class SignifierModelBuilder extends ModelBuilder {
     }
 
     public void addParallelAffordance(Resource planId, Affordance affordance){
-        add(planId, rdf.createIRI(SignifierOntology.hasParallelAffordance), affordance.getAffordanceId());
+        add(planId, rdf.createIRI(SignifierOntology.hasParallelAffordance), affordance.getId());
         addAffordance(affordance);
     }
 
@@ -100,7 +109,7 @@ public class SignifierModelBuilder extends ModelBuilder {
     }
 
     public void addPlan(Resource affordanceId, Plan plan){
-        add(affordanceId, rdf.createIRI(SignifierOntology.hasPlan), plan.getPlanId());
+        add(affordanceId, rdf.createIRI(SignifierOntology.hasPlan), plan.getId());
         addPlan(plan);
 
     }
@@ -113,7 +122,7 @@ public class SignifierModelBuilder extends ModelBuilder {
 
     public void addPlans(Resource affordanceId, Set<Plan> plans){
         for (Plan plan : plans){
-            add(affordanceId, rdf.createIRI(SignifierOntology.hasPlan), plan.getPlanId());
+            add(affordanceId, rdf.createIRI(SignifierOntology.hasPlan), plan.getId());
             addPlan(plan);
         }
     }
@@ -123,7 +132,7 @@ public class SignifierModelBuilder extends ModelBuilder {
     }
 
     public void addAffordance(Resource signifierId, Affordance affordance){
-        add(signifierId, rdf.createIRI(SignifierOntology.hasAffordance),affordance.getAffordanceId());
+        add(signifierId, rdf.createIRI(SignifierOntology.hasAffordance),affordance.getId());
         addAffordance(affordance);
     }
 

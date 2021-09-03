@@ -56,7 +56,7 @@ public class RDFS {
         Resource currentListId = listId;
         while (iterator.hasNext()) {
             Affordance a = iterator.next();
-            m.add(currentListId, rdf.createIRI(RDFSOntology.first), a.getAffordanceId());
+            m.add(currentListId, rdf.createIRI(RDFSOntology.first), a.getId());
             m.addAll(a.getModel());
             if (iterator.hasNext()) {
                 BNode newListId = rdf.createBNode();
@@ -78,6 +78,26 @@ public class RDFS {
     }
 
     public static List<Value> readList(Resource resourceId,Model model){
+        List<Value> list = new ArrayList<>();
+        Resource currentId = resourceId;
+        while (!currentId.equals(rdf.createIRI(RDFSOntology.nil))){
+            Optional<Value> value = Models.object(model.filter(currentId,rdf.createIRI(RDFSOntology.first),null));
+            if (value.isPresent()){
+                list.add(value.get());
+            }
+            Optional<Resource> newResourceId = Models.objectResource(model.filter(currentId,rdf.createIRI(RDFSOntology.rest),null));
+            if (newResourceId.isPresent()){
+                currentId = newResourceId.get();
+            }
+            else{
+                return list;
+            }
+
+        }
+        return list;
+    }
+
+    public static List<Value> readSeq(Resource resourceId,Model model){
         List<Value> list = new ArrayList<>();
         Resource currentId = resourceId;
         while (!currentId.equals(rdf.createIRI(RDFSOntology.nil))){

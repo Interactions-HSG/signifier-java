@@ -8,6 +8,7 @@ import org.hyperagents.affordance.Affordance;
 import org.hyperagents.io.SignifierReader;
 import org.hyperagents.ontologies.SignifierOntology;
 import org.hyperagents.util.Creator;
+import org.hyperagents.util.RDFComponent;
 import org.hyperagents.util.RDFS;
 
 import java.io.ByteArrayOutputStream;
@@ -16,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
-public class Signifier {
+public class Signifier extends RDFComponent {
     private Resource signifierId;
     private Optional<Instant> expirationDate;
     private Optional<Integer> salience;
@@ -33,9 +34,7 @@ public class Signifier {
         this.model=model;
     }
 
-    public Resource getSignifierId(){
-        return signifierId;
-    }
+    public Resource getId(){ return signifierId; }
 
     public Optional<Instant> getExpirationDate() { return expirationDate; }
 
@@ -51,15 +50,7 @@ public class Signifier {
         return model;
     }
 
-    public String getTextTriples(RDFFormat format){
-        ByteArrayOutputStream output=new ByteArrayOutputStream();
-        Rio.write(model,output,format);
-        return output.toString();
-    }
 
-    public String toString(){
-        return getTextTriples(RDFFormat.TURTLE);
-    }
 
     public static Signifier readSignifier(Resource signifierId,Model m){
         //Model model = SignifierReader.getBlock(signifierId,m);

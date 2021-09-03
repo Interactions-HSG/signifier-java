@@ -30,7 +30,7 @@ public class ChoicePlan extends Plan {
     }
 
     public static boolean hasOption(Plan p){
-        Resource planId = p.getPlanId();
+        Resource planId = p.getId();
         Model model = p.getModel();
         boolean b = false;
         Optional<Value> optional = Models.object(model.filter(planId,
@@ -43,7 +43,7 @@ public class ChoicePlan extends Plan {
     }
 
     public static Set<Affordance> getOptions(Plan p){
-        Resource planId = p.getPlanId();
+        Resource planId = p.getId();
         Model model = p.getModel();
         Set<Affordance> affordances = new HashSet<>();
         Set<Resource> options = Models.objectResources(model.filter(planId,
@@ -56,7 +56,7 @@ public class ChoicePlan extends Plan {
     }
 
     public static ChoicePlan getAsChoicePlan(Plan p){
-        Resource planId = p.getPlanId();
+        Resource planId = p.getId();
         Model model = p.getModel();
         Set<Affordance> options = getOptions(p);
         return new ChoicePlan.Builder(planId).addOptions(options).build();

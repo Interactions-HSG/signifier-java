@@ -27,7 +27,7 @@ public class PlanTest {
 
     @Test
     public void checkId(){
-        assertEquals(planId, plan.getPlanId());
+        assertEquals(planId, plan.getId());
         assertEquals(model, plan.getModel());
     }
 }

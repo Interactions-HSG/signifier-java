@@ -39,11 +39,11 @@ public class ChoicePlanTest {
                 .addOption(a2)
                 .build();
         ModelBuilder modelBuilder = new ModelBuilder();
-        modelBuilder.add(cpId, rdf.createIRI(SignifierOntology.hasOption), a1.getAffordanceId());
+        modelBuilder.add(cpId, rdf.createIRI(SignifierOntology.hasOption), a1.getId());
         for (Statement s : a1.getModel()){
             modelBuilder.add(s.getSubject(), s.getPredicate(), s.getObject());
         }
-        modelBuilder.add(cpId, rdf.createIRI(SignifierOntology.hasOption), a2.getAffordanceId());
+        modelBuilder.add(cpId, rdf.createIRI(SignifierOntology.hasOption), a2.getId());
         for (Statement s : a2.getModel()){
             modelBuilder.add(s.getSubject(), s.getPredicate(), s.getObject());
         }

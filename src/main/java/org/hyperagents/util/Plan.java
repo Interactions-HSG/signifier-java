@@ -2,10 +2,14 @@ package org.hyperagents.util;
 
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
 import org.hyperagents.ontologies.SignifierOntology;
 import org.hyperagents.signifier.SignifierModelBuilder;
 
-public class Plan {
+import java.io.ByteArrayOutputStream;
+
+public class Plan extends RDFComponent{
 
     protected Resource planId;
 
@@ -16,13 +20,12 @@ public class Plan {
         this.model = model;
     }
 
-    public Resource getPlanId(){
-        return planId;
-    }
+    public Resource getId(){ return planId; }
 
     public Model getModel(){
         return model;
     }
+
 
 
     public static class Builder {

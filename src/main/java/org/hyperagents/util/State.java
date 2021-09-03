@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 
-public class State {
+public class State extends RDFComponent {
 
     private Resource stateId;
 
@@ -26,9 +26,7 @@ public class State {
         this.falseStatements = falseStatements;
     }
 
-    public Resource getStateId() {
-        return stateId;
-    }
+    public Resource getId(){ return stateId; }
 
     public Set<ReifiedStatement> getStatements() {
         return statements;
@@ -49,6 +47,7 @@ public class State {
 
    public Model getModel(){
         SignifierModelBuilder builder = new SignifierModelBuilder();
+        builder.defineState(stateId);
         for (ReifiedStatement statement : statements) {
             builder.addReifiedStatement(stateId, statement);
         }
@@ -58,10 +57,6 @@ public class State {
         return builder.build();
    }
 
-   @Override
-   public String toString(){
-        return SignifierWriter.writeModel(getModel());
-   }
 
 
     public static State retrieveState(Resource stateId, Model m) {

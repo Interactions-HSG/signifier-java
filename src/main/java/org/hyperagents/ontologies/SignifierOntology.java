@@ -36,6 +36,8 @@ public class SignifierOntology {
 
     public static final String hasPrecondition = PREFIX + "hasPrecondition";
 
+    public static final String hasPostcondition = PREFIX + "hasPostcondition";
+
     public static final String hasObjective = PREFIX + "hasObjective";
 
     public static final String hasStatement = PREFIX + "hasStatement";

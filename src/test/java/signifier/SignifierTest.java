@@ -52,7 +52,7 @@ public class SignifierTest {
 
     @Test
     public void checkId(){
-        assertEquals(signifierId,signifier.getSignifierId());
+        assertEquals(signifierId,signifier.getId());
     }
 
     @Test
@@ -79,7 +79,7 @@ public class SignifierTest {
 
     @Test
     public void checkCreator(){
-        Creator c1 = Creator.getCreator(signifier.getSignifierId(), signifier.getModel());
+        Creator c1 = Creator.getCreator(signifier.getId(), signifier.getModel());
         Creator c2 = signifier.getCreator().get();
         assertEquals(c1.getValue(), c2.getValue());
         assertEquals(c1.getModel(), c2.getModel());

@@ -118,7 +118,7 @@ public class HypermediaPlan extends Plan {
     }
 
     public static HypermediaPlan getAsHypermediaPlan(Plan p){
-        return retrieveHypermediaPlan(p.getPlanId(), p.getModel());
+        return retrieveHypermediaPlan(p.getId(), p.getModel());
     }
 
     public static class Builder extends Plan.Builder {

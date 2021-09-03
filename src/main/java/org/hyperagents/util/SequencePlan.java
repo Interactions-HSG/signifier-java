@@ -26,7 +26,7 @@ public class SequencePlan extends Plan {
 
 
     public static boolean hasSequence(Plan p){
-        Resource planId = p.getPlanId();
+        Resource planId = p.getId();
         Model model = p.getModel();
         boolean b = false;
         Optional<Value> optional = Models.object(model.filter(planId,
@@ -38,7 +38,7 @@ public class SequencePlan extends Plan {
     }
 
     public static List<Affordance> getSequence(Plan p){
-        Resource planId = p.getPlanId();
+        Resource planId = p.getId();
         Model model = p.getModel();
         List<Affordance> affordances = new ArrayList<>();
         Optional<Resource> optionalResource = Models.objectResource(model.filter(planId,
@@ -59,7 +59,7 @@ public class SequencePlan extends Plan {
         SequencePlan sp = null;
         if (hasSequence(p)){
             List<Affordance> sequence = getSequence(p);
-            sp = new SequencePlan.Builder(p.getPlanId())
+            sp = new SequencePlan.Builder(p.getId())
                     .addSequence(sequence)
                     .build();
         }

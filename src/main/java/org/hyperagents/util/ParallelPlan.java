@@ -23,7 +23,7 @@ public class ParallelPlan extends Plan {
     }
 
     public static Set<Affordance> getAffordances(Plan p){
-        Resource planId = p.getPlanId();
+        Resource planId = p.getId();
         Model model = p.getModel();
         Set<Affordance> affordances = new HashSet<>();
         Set<Resource> options = Models.objectResources(model.filter(planId,
@@ -36,7 +36,7 @@ public class ParallelPlan extends Plan {
     }
 
     public static ParallelPlan getAsParallelPlan(Plan p){
-        Resource planId = p.getPlanId();
+        Resource planId = p.getId();
         Model model = p.getModel();
         Set<Affordance> affordances= getAffordances(p);
         return new Builder(planId).addParallelAffordances(affordances).build();

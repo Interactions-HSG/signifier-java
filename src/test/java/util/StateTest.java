@@ -2,6 +2,7 @@ package util;
 
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.hyperagents.util.ReifiedStatement;
 import org.hyperagents.util.State;
 import org.hyperagents.util.RDFS;
@@ -35,7 +36,8 @@ public class StateTest {
     @Test
     public void checkModel(){
         ModelBuilder graphBuilder = new ModelBuilder();
-        graphBuilder.add(state.getStateId(),rdf.createIRI(SignifierOntology.hasStatement),statementId);
+        graphBuilder.add(state.getId(), RDF.TYPE, rdf.createIRI(SignifierOntology.State));
+        graphBuilder.add(state.getId(),rdf.createIRI(SignifierOntology.hasStatement),statementId);
         graphBuilder.add(statementId,rdf.createIRI(RDFSOntology.subject),subject);
         graphBuilder.add(statementId,rdf.createIRI(RDFSOntology.predicate),predicate);
         graphBuilder.add(statementId,rdf.createIRI(RDFSOntology.object),object);

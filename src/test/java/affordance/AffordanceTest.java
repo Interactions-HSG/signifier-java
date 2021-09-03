@@ -40,20 +40,23 @@ public class AffordanceTest {
         Resource affordance1Id = rdf.createBNode("affordance1");
         Affordance affordance1 = new Affordance.Builder(affordance1Id)
                 .setPrecondition(precondition)
-                .setObjective(objective)
+                .setPostcondition(objective)
+                .addObjective(objective)
                 .add(rdf.createIRI("https://example.com/name"), rdf.createLiteral("affordance1"))
                 .build();
         Resource affordance2Id = rdf.createBNode("affordance2");
         Affordance affordance2 = new Affordance.Builder(affordance2Id)
                 .setPrecondition(precondition)
-                .setObjective(objective)
+                .setPostcondition(objective)
+                .addObjective(objective)
                 .add(rdf.createIRI("https://example.com/name"), rdf.createLiteral("affordance2"))
                 .build();
         Resource planId = rdf.createBNode("plan");
         plan = new ChoicePlan.Builder(planId).addOption(affordance1).addOption(affordance2).build();
         affordance = new Affordance.Builder(affordanceId)
                 .setPrecondition(precondition)
-                .setObjective(objective)
+                .setPostcondition(objective)
+                .addObjective(objective)
                 .addPlan(plan)
                 .add(property,l)
                 .build();
@@ -78,11 +81,11 @@ public class AffordanceTest {
     }*/
 
     @Test
-    public void checkObjectiveModel(){
+    public void checkPostconditionModel(){
         SignifierModelBuilder graphBuilder = new SignifierModelBuilder();
         graphBuilder.addState(objective);
         Model model = graphBuilder.build();
-        assertEquals(model,affordance.getObjective().get().getModel());
+        assertEquals(model,affordance.getPostcondition().get().getModel());
     }
 
     @Test

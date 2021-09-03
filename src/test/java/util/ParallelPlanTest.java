@@ -37,11 +37,11 @@ public class ParallelPlanTest {
                 .addParallelAffordance(a2)
                 .build();
         ModelBuilder modelBuilder = new ModelBuilder();
-        modelBuilder.add(cpId, rdf.createIRI(SignifierOntology.hasParallelAffordance), a1.getAffordanceId());
+        modelBuilder.add(cpId, rdf.createIRI(SignifierOntology.hasParallelAffordance), a1.getId());
         for (Statement s : a1.getModel()){
             modelBuilder.add(s.getSubject(), s.getPredicate(), s.getObject());
         }
-        modelBuilder.add(cpId, rdf.createIRI(SignifierOntology.hasParallelAffordance), a2.getAffordanceId());
+        modelBuilder.add(cpId, rdf.createIRI(SignifierOntology.hasParallelAffordance), a2.getId());
         for (Statement s : a2.getModel()){
             modelBuilder.add(s.getSubject(), s.getPredicate(), s.getObject());
         }
