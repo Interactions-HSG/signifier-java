@@ -143,7 +143,7 @@ public class RDFS {
 
     public static Model createSeq(Resource seqId, List<Value> values) {
         Model m = new DynamicModelFactory().createEmptyModel();
-        for (int i = 0; i<values.size();i++){
+        for (int i = 1; i<=values.size();i++){
             m.add(seqId, createPredicate(i), values.get(i));
         }
         return m;
