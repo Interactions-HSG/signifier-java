@@ -153,7 +153,7 @@ public class RDFS {
         Model m = new DynamicModelFactory().createEmptyModel();
         for (int i = 0;i<list.size();i++){
             Affordance a = list.get(i);
-            m.add(seqId, createPredicate(i), a.getId());
+            m.add(seqId, createPredicate(i+1), a.getId());
             m.addAll(a.getModel());
         }
         return m;
