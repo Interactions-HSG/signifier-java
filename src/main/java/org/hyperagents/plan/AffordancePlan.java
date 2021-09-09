@@ -1,11 +1,16 @@
 package org.hyperagents.plan;
 
+import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.eclipse.rdf4j.model.util.Models;
 import org.hyperagents.affordance.Affordance;
+import org.hyperagents.ontologies.SignifierOntology;
 import org.hyperagents.signifier.SignifierModelBuilder;
+import org.hyperagents.util.RDFS;
 import org.hyperagents.util.State;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class AffordancePlan extends Plan{
@@ -37,6 +42,19 @@ public class AffordancePlan extends Plan{
         }
         return b;
 
+    }
+
+    public static AffordancePlan getAsAffordancePlan(Plan p){
+        Resource planId = p.getId();
+        Model model = p.getModel();
+        Optional<Resource> opPlanObjectiveId = Models.objectResource(model.filter(planId, RDFS.rdf.createIRI(SignifierOntology.hasObjective), null));
+        if (opPlanObjectiveId.isPresent()){
+            Resource planObjectiveId = opPlanObjectiveId.get();
+            State planObjective = State.retrieveState(planObjectiveId, model);
+            AffordancePlan affordancePlan = new AffordancePlan(planId, planObjective);
+            return affordancePlan;
+        }
+        return null;
     }
 
 
