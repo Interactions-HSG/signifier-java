@@ -98,7 +98,10 @@ public class Affordance extends RDFComponent {
             Plan.Builder planBuilder = new Plan.Builder(planId);
             planBuilder.addModel(RDFS.retrieveBlock(planId, model));
             Plan plan = planBuilder.build();
-            builder.addPlan((DirectPlan) plan);
+            if (plan.isDirectPlan()) {
+                DirectPlan directPlan = plan.toDirectPlan();
+                builder.addPlan(directPlan);
+            }
         }
         return builder.build();
     }
