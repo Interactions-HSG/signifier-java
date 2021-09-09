@@ -31,6 +31,10 @@ public class Plan extends RDFComponent {
         return model;
     }
 
+    public DirectPlan toDirectPlan(){
+        return DirectPlanImpl.getDirectPlan(this);
+    }
+
     public static Plan retrievePlan(Resource planId, Model model){
         Model m = SignifierReader.getBlock(planId, model);
         return new Plan(planId, model);
