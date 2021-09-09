@@ -30,6 +30,7 @@ public class Affordance extends RDFComponent {
         this.affordanceId = affordanceId;
         this.precondition = precondition;
         this.postcondition = postcondition;
+        this.objectives = objectives;
         this.plans = plans;
         this.model = model;
     }
