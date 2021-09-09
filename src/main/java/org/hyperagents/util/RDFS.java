@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
+import org.hyperagents.plan.Plan;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -155,6 +156,16 @@ public class RDFS {
             Affordance a = list.get(i);
             m.add(seqId, createPredicate(i+1), a.getId());
             m.addAll(a.getModel());
+        }
+        return m;
+    }
+
+    public static Model createPlanSeq(Resource seqId, List<Plan> list) {
+        Model m = new DynamicModelFactory().createEmptyModel();
+        for (int i = 0;i<list.size();i++){
+            Plan p = list.get(i);
+            m.add(seqId, createPredicate(i+1), p.getId());
+            m.addAll(p.getModel());
         }
         return m;
     }

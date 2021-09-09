@@ -1,18 +1,15 @@
 package org.hyperagents.affordance;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.Rio;
 import org.hyperagents.io.SignifierReader;
-import org.hyperagents.io.SignifierWriter;
 import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.plan.DirectPlan;
 import org.hyperagents.signifier.SignifierModelBuilder;
-import org.hyperagents.util.Plan;
+import org.hyperagents.plan.Plan;
 import org.hyperagents.util.RDFComponent;
 import org.hyperagents.util.State;
 import org.hyperagents.util.RDFS;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
 
-import java.io.ByteArrayOutputStream;
 import java.util.*;
 
 public class Affordance extends RDFComponent {
@@ -22,14 +19,15 @@ public class Affordance extends RDFComponent {
     private Optional<State> precondition;
     private Optional<State> postcondition;
     private Set<State> objectives;
-    private Set<Plan> plans;
+    private Set<DirectPlan> plans;
 
     private Model model;
 
-    protected Affordance(Resource affordanceId, Optional<State> precondition, Optional<State> postcondition, Set<State> objectives, Set<Plan> plans, Model model){
+    protected Affordance(Resource affordanceId, Optional<State> precondition, Optional<State> postcondition, Set<State> objectives, Set<DirectPlan> plans, Model model){
         this.affordanceId = affordanceId;
         this.precondition = precondition;
         this.postcondition = postcondition;
+        this.objectives = objectives;
         this.plans = plans;
         this.model = model;
     }
@@ -44,7 +42,7 @@ public class Affordance extends RDFComponent {
 
     public List<State> getObjectiveList(){ return new ArrayList<>(objectives); }
 
-    public Set<Plan> getPlans(){ return plans; }
+    public Set<DirectPlan> getPlans(){ return plans; }
 
     public Plan getFirstPlan(){ return new Vector<Plan>(plans).firstElement(); }
 
@@ -100,7 +98,7 @@ public class Affordance extends RDFComponent {
             Plan.Builder planBuilder = new Plan.Builder(planId);
             planBuilder.addModel(RDFS.retrieveBlock(planId, model));
             Plan plan = planBuilder.build();
-            builder.addPlan(plan);
+            builder.addPlan((DirectPlan) plan);
         }
         return builder.build();
     }
@@ -114,7 +112,7 @@ public class Affordance extends RDFComponent {
         protected Optional<State> precondition;
         protected Optional<State> postcondition;
         protected Set<State> objectives;
-        protected Set<Plan> plans;
+        protected Set<DirectPlan> plans;
         protected SignifierModelBuilder graphBuilder;
         protected ValueFactory rdf;
 
@@ -165,17 +163,17 @@ public class Affordance extends RDFComponent {
             return this;
         }
 
-        public Builder addPlan(Plan plan){
+        public Builder addPlan(DirectPlan plan){
             this.plans.add(plan);
             graphBuilder.addPlan(affordanceId, plan);
             return this;
         }
 
-        public Builder addPlans(Set<Plan> plans){
+        /*public Builder addPlans(Set<DirectPlan> plans){
             this.plans.addAll(plans);
             graphBuilder.addPlans(affordanceId, plans);
             return this;
-        }
+        }*/
 
         public Affordance build(){
             graphBuilder.addType(affordanceId, rdf.createIRI(SignifierOntology.Affordance));

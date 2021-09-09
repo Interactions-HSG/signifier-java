@@ -2,6 +2,7 @@ package org.hyperagents.signifier;
 
 import org.hyperagents.affordance.Affordance;
 import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.plan.Plan;
 import org.hyperagents.util.*;
 
 import org.eclipse.rdf4j.model.*;
@@ -28,12 +29,12 @@ public class SignifierModelBuilder extends ModelBuilder {
         addModel(m);
     }
 
-    public void addSeq(Resource seqId, List<Affordance> list){
-        Model m = RDFS.createAffordanceSeq(seqId, list);
+    public void addSeq(Resource seqId, List<Plan> list){
+        Model m = RDFS.createPlanSeq(seqId, list);
         addModel(m);
     }
 
-    public void addSequence(Resource planId, List<Affordance> sequence){
+    public void addSequence(Resource planId, List<Plan> sequence){
         Resource sequenceId =rdf.createBNode();
         add(planId, rdf.createIRI(SignifierOntology.hasSequence), sequenceId);
         addSeq(sequenceId, sequence);
@@ -74,8 +75,8 @@ public class SignifierModelBuilder extends ModelBuilder {
         addState(state);
     }
 
-    public void addObjective(Resource affordanceId,State state){
-        add(affordanceId,rdf.createIRI(SignifierOntology.hasObjective),state.getId());
+    public void addObjective(Resource id,State state){
+        add(id,rdf.createIRI(SignifierOntology.hasObjective),state.getId());
         addState(state);
     }
 
@@ -86,25 +87,25 @@ public class SignifierModelBuilder extends ModelBuilder {
         }
     }
 
-    public void addOption(Resource resource, Affordance affordance){
-        add(resource,rdf.createIRI(SignifierOntology.hasOption),affordance.getId());
-        addAffordance(affordance);
+    public void addOption(Resource resource, Plan plan){
+        add(resource,rdf.createIRI(SignifierOntology.hasOption),plan.getId());
+        addPlan(plan);
     }
 
-    public void addOptions(Resource resource, Set<Affordance> affordances){
-        for (Affordance affordance : affordances){
-            addOption(resource, affordance);
+    public void addOptions(Resource resource, Set<Plan> plans){
+        for (Plan plan: plans){
+            addOption(resource, plan);
         }
     }
 
-    public void addParallelAffordance(Resource planId, Affordance affordance){
-        add(planId, rdf.createIRI(SignifierOntology.hasParallelAffordance), affordance.getId());
-        addAffordance(affordance);
+    public void addParallelPlan(Resource planId, Plan plan){
+        add(planId, rdf.createIRI(SignifierOntology.hasParallelPlan), plan.getId());
+        addPlan(plan);
     }
 
-    public void addParallelAffordances(Resource resource, Set<Affordance> affordances){
-        for (Affordance affordance : affordances){
-            addParallelAffordance(resource, affordance);
+    public void addParallelPlans(Resource resource, Set<Plan> plans){
+        for (Plan plan : plans){
+            addParallelPlan(resource, plan);
         }
     }
 

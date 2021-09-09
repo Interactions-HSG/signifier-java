@@ -3,14 +3,14 @@ package org.hyperagents.hypermedia;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.util.Models;
-import org.hyperagents.util.Plan;
+import org.hyperagents.plan.BasicPlan;
+import org.hyperagents.plan.Plan;
 import org.hyperagents.util.RDFS;
 
 import java.util.*;
 
-public class HypermediaPlan extends Plan {
+public class HypermediaPlan extends BasicPlan {
     String url;
     private String method;
     private Set<String> operationTypes;

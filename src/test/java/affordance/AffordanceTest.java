@@ -1,10 +1,11 @@
 package affordance;
 
 import org.eclipse.rdf4j.model.*;
-import org.eclipse.rdf4j.model.util.ModelBuilder;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.hyperagents.affordance.Affordance;
-import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.plan.AffordancePlan;
+import org.hyperagents.plan.ChoicePlan;
+import org.hyperagents.plan.DirectPlan;
+import org.hyperagents.plan.Plan;
 import org.hyperagents.util.*;
 import org.hyperagents.ontologies.RDFSOntology;
 import org.hyperagents.signifier.SignifierModelBuilder;
@@ -16,7 +17,9 @@ public class AffordanceTest {
     ValueFactory rdf;
     State precondition;
     State objective;
-    Plan plan;
+    State objective1;
+    State objective2;
+    DirectPlan plan;
     Affordance affordance;
 
     @Before
@@ -25,6 +28,7 @@ public class AffordanceTest {
         Resource preconditionStatementId = rdf.createBNode("preconditionStatement");
         Resource subject = rdf.createBNode("subject");
         IRI predicate = rdf.createIRI(RDFSOntology.TYPE);
+        IRI predicate2 = rdf.createIRI("http://example.org/predicate");
         Value object = rdf.createLiteral("Type1");
         ReifiedStatement preconditionStatement = new ReifiedStatement(preconditionStatementId, subject, predicate, object);
         Resource preconditionId = rdf.createBNode("precondition");
@@ -34,25 +38,32 @@ public class AffordanceTest {
         ReifiedStatement objectiveStatement = new ReifiedStatement(objectiveStatementId, subject, predicate, object2);
         Resource objectiveId = rdf.createBNode("objective");
         objective = new State.Builder(objectiveId).addStatement(objectiveStatement).build();
+        Resource objective1Id = rdf.createBNode("objective1");
+        objective1 = new State.Builder(objective1Id).addStatement(objectiveStatement).build();
+        ReifiedStatement objectiveStatement2 = new ReifiedStatement(objectiveStatementId, subject, predicate2, object2);
+        Resource objective2Id = rdf.createBNode("objective2");
+        objective2 = new State.Builder(objective2Id).addStatement(objectiveStatement2).build();
         Resource affordanceId = rdf.createBNode("affordance");
         IRI property = rdf.createIRI("https://example.com/number");
         Literal l = rdf.createLiteral(30);
         Resource affordance1Id = rdf.createBNode("affordance1");
         Affordance affordance1 = new Affordance.Builder(affordance1Id)
                 .setPrecondition(precondition)
-                .setPostcondition(objective)
-                .addObjective(objective)
+                .setPostcondition(objective1)
+                .addObjective(objective1)
                 .add(rdf.createIRI("https://example.com/name"), rdf.createLiteral("affordance1"))
                 .build();
         Resource affordance2Id = rdf.createBNode("affordance2");
         Affordance affordance2 = new Affordance.Builder(affordance2Id)
                 .setPrecondition(precondition)
-                .setPostcondition(objective)
-                .addObjective(objective)
+                .setPostcondition(objective2)
+                .addObjective(objective2)
                 .add(rdf.createIRI("https://example.com/name"), rdf.createLiteral("affordance2"))
                 .build();
+        AffordancePlan plan1 = new AffordancePlan(rdf.createBNode(), objective1);
+        AffordancePlan plan2 = new AffordancePlan(rdf.createBNode(), objective2);
         Resource planId = rdf.createBNode("plan");
-        plan = new ChoicePlan.Builder(planId).addOption(affordance1).addOption(affordance2).build();
+        plan = new ChoicePlan.Builder(planId).addOption(plan1).addOption(plan2).build();
         affordance = new Affordance.Builder(affordanceId)
                 .setPrecondition(precondition)
                 .setPostcondition(objective)
