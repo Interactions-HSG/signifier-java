@@ -1,5 +1,6 @@
 package util;
 
+
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
@@ -11,6 +12,7 @@ import org.hyperagents.ontologies.SignifierOntology;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class StateTest {
     private ValueFactory rdf;
@@ -43,5 +45,17 @@ public class StateTest {
         graphBuilder.add(statementId,rdf.createIRI(RDFSOntology.object),object);
         Model model = graphBuilder.build();
         assertEquals(model,state.getModel());
+    }
+
+    @Test
+    public void checkEquals(){
+        Resource statement1Id = rdf.createBNode("statement1");
+        ReifiedStatement statement1 = new ReifiedStatement(statement1Id,subject, predicate, object);
+        State state1 = new State.Builder(rdf.createBNode("state1")).addStatement(statement1).build();
+        Resource statement2Id = rdf.createBNode("statement2");
+        ReifiedStatement statement2 = new ReifiedStatement(statement2Id,subject, predicate, object);
+        State state2 = new State.Builder(rdf.createBNode("state2")).addStatement(statement2).build();
+        boolean b = state1.equals(state2);
+        assertTrue(b);
     }
 }

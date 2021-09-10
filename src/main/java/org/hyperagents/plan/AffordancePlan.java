@@ -2,6 +2,7 @@ package org.hyperagents.plan;
 
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.util.Models;
 import org.hyperagents.affordance.Affordance;
@@ -34,8 +35,6 @@ public class AffordancePlan extends Plan{
         boolean b = false;
         Set<State> affordanceObjectives = affordance.getObjectives();
         int size = affordanceObjectives.size();
-        System.out.println("size");
-        System.out.println(size);
         for (State affordanceObjective : affordanceObjectives){
             if (affordanceObjective.equals(objective)){
                 b = true;
@@ -44,6 +43,7 @@ public class AffordancePlan extends Plan{
         return b;
 
     }
+
 
     public static AffordancePlan getAsAffordancePlan(Plan p){
         Resource planId = p.getId();

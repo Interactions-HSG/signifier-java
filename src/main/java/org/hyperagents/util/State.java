@@ -57,7 +57,39 @@ public class State extends RDFComponent {
         return builder.build();
    }
 
+   public Set<Statement> getStatementSet(){
+        Set<Statement> trueStatements = new HashSet<>();
+        Set<ReifiedStatement> statements = getStatements();
+        for (ReifiedStatement statement : statements){
+            trueStatements.add(statement.getStatement());
+        }
+        return trueStatements;
 
+    }
+
+    public Set<Statement> getFalseStatementSet(){
+        Set<Statement> falseStatements = new HashSet<>();
+        Set<ReifiedStatement> statements = getFalseStatements();
+        for (ReifiedStatement statement : statements){
+            falseStatements.add(statement.getStatement());
+        }
+        return falseStatements;
+
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean b = false;
+        State state = (State) obj;
+        Set<Statement> trueStatements = getStatementSet();
+        Set<Statement> falseStatement = getFalseStatementSet();
+        Set<Statement> trueStateStatements = state.getStatementSet();
+        Set<Statement> falseStateStatements = state.getFalseStatementSet();
+        if (trueStatements.equals(trueStateStatements) && falseStatements.equals(falseStateStatements)){
+            b = true;
+        }
+        return b;
+    }
 
     public static State retrieveState(Resource stateId, Model m) {
         State.Builder builder = new State.Builder(stateId);
