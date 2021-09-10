@@ -7,4 +7,8 @@ public abstract class DirectPlan extends Plan {
     protected DirectPlan(Resource planId, Model model) {
         super(planId, model);
     }
+
+    public Plan toPlan(){
+        return new Plan.Builder(planId).addModel(model).build();
+    }
 }

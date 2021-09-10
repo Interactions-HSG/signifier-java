@@ -44,7 +44,7 @@ public class Affordance extends RDFComponent {
 
     public Set<DirectPlan> getPlans(){ return plans; }
 
-    public Plan getFirstPlan(){ return new Vector<Plan>(plans).firstElement(); }
+    public Plan getFirstPlan(){ return new Vector<DirectPlan>(plans).firstElement().toPlan(); }
 
     public Model getModel(){
         return model;
