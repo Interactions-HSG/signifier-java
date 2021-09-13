@@ -21,7 +21,7 @@ public class Plan extends RDFComponent {
 
     protected Plan(Resource planId, Model model){
         this.planId = planId;
-        this.model = model;
+        this.model = getBlock(planId, model);
     }
 
     protected Plan(Resource planId){

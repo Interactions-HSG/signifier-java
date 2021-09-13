@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
+import org.hyperagents.io.SignifierReader;
 
 import java.io.ByteArrayOutputStream;
 
@@ -17,6 +18,10 @@ public abstract class RDFComponent {
         ByteArrayOutputStream output=new ByteArrayOutputStream();
         Rio.write(getModel(),output,format);
         return output.toString();
+    }
+
+    protected Model getBlock(Resource id, Model m){
+        return SignifierReader.getBlock(id, m);
     }
 
     @Override
