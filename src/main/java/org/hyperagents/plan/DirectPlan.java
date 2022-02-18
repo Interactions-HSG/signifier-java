@@ -9,6 +9,6 @@ public abstract class DirectPlan extends Plan {
     }
 
     public Plan toPlan(){
-        return new Plan.Builder(planId).addModel(model).build();
+        return new Plan.Builder(id).addModel(model).build();
     }
 }

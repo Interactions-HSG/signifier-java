@@ -1,6 +1,7 @@
 package org.hyperagents.signifier;
 
 import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
@@ -18,7 +19,6 @@ import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
 public class Signifier extends RDFComponent {
-    private Resource signifierId;
     private Optional<Instant> expirationDate;
     private Optional<Integer> salience;
     private Optional<Creator> creator;
@@ -26,15 +26,14 @@ public class Signifier extends RDFComponent {
     private Model model;
 
     protected Signifier(Resource signifierId, Optional<Instant> expirationDate, Optional<Integer> salience, Optional<Creator> creator, Set<Affordance>  affordances, Model model){
-        this.signifierId=signifierId;
+        super(signifierId);
         this.expirationDate = expirationDate;
         this.salience = salience;
         this.creator = creator;
         this.affordances = affordances;
-        this.model=model;
+        this.model = model;
     }
 
-    public Resource getId(){ return signifierId; }
 
     public Optional<Instant> getExpirationDate() { return expirationDate; }
 

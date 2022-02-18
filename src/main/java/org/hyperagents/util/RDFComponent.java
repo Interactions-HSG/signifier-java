@@ -5,12 +5,22 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.hyperagents.io.SignifierReader;
+import org.hyperagents.signifier.SignifierModelBuilder;
 
 import java.io.ByteArrayOutputStream;
 
 public abstract class RDFComponent {
 
-    public abstract Resource getId();
+    protected Resource id;
+
+
+    protected RDFComponent(Resource id){
+        this.id = id;
+    }
+
+    public  Resource getId(){
+        return id;
+    }
 
     public abstract Model getModel();
 
@@ -27,5 +37,24 @@ public abstract class RDFComponent {
     @Override
     public String toString(){
         return getTextTriples(RDFFormat.TURTLE);
+    }
+
+    protected static abstract class Builder {
+
+        protected Resource id;
+
+        protected SignifierModelBuilder modelBuilder;
+
+        protected Builder(Resource id){
+            this.id = id;
+            this.modelBuilder = new SignifierModelBuilder();
+        }
+
+        protected Builder addModel(Model model){
+            modelBuilder.addModel(model);
+            return this;
+        }
+
+        protected abstract RDFComponent build();
     }
 }

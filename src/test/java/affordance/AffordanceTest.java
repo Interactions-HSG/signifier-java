@@ -1,7 +1,9 @@
 package affordance;
 
 import org.eclipse.rdf4j.model.*;
+import org.hyperagents.action.Action;
 import org.hyperagents.affordance.Affordance;
+import org.hyperagents.hypermedia.HypermediaAction;
 import org.hyperagents.plan.AffordancePlan;
 import org.hyperagents.plan.ChoicePlan;
 import org.hyperagents.plan.DirectPlan;
@@ -19,7 +21,7 @@ public class AffordanceTest {
     State objective;
     State objective1;
     State objective2;
-    DirectPlan plan;
+    Action action;
     Affordance affordance;
 
     @Before
@@ -63,12 +65,13 @@ public class AffordanceTest {
         AffordancePlan plan1 = new AffordancePlan(rdf.createBNode(), objective1);
         AffordancePlan plan2 = new AffordancePlan(rdf.createBNode(), objective2);
         Resource planId = rdf.createBNode("plan");
-        plan = new ChoicePlan.Builder(planId).addOption(plan1).addOption(plan2).build();
+        //plan = new ChoicePlan.Builder(planId).addOption(plan1).addOption(plan2).build();
+        action = new HypermediaAction.Builder(rdf.createBNode(),"http://example.org", "GET").build();
         affordance = new Affordance.Builder(affordanceId)
                 .setPrecondition(precondition)
                 .setPostcondition(objective)
                 .addObjective(objective)
-                .addPlan(plan)
+                .addAction(action)
                 .add(property,l)
                 .build();
     }
@@ -162,8 +165,8 @@ public class AffordanceTest {
     }*/
 
     @Test
-    public void checkPlan(){
-        assertEquals(plan, affordance.getFirstPlan());
+    public void checkAction(){
+        assertEquals(action, affordance.getFirstAction());
     }
 
 

@@ -19,7 +19,7 @@ public class AffordancePlan extends Plan{
     private State objective;
 
     public AffordancePlan(Resource planId, State objective){
-        super(planId);
+        super(planId, new ModelBuilder().build());
         this.objective = objective;
         SignifierModelBuilder builder = new SignifierModelBuilder();
         builder.addType(planId, RDFS.rdf.createIRI(SignifierOntology.AffordancePlan));

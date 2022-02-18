@@ -1,5 +1,6 @@
 package org.hyperagents.util;
 
+import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.hyperagents.io.SignifierWriter;
 import org.hyperagents.io.SignifierReader;
 import org.hyperagents.signifier.SignifierModelBuilder;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 
 public class State extends RDFComponent {
 
-    private Resource stateId;
 
     private Set<ReifiedStatement> statements;
 
@@ -21,12 +21,11 @@ public class State extends RDFComponent {
 
 
     protected State(Resource stateId, Set<ReifiedStatement> statements, Set<ReifiedStatement> falseStatements) {
-        this.stateId = stateId;
+        super(stateId);
         this.statements = statements;
         this.falseStatements = falseStatements;
     }
 
-    public Resource getId(){ return stateId; }
 
     public Set<ReifiedStatement> getStatements() {
         return statements;
@@ -47,12 +46,12 @@ public class State extends RDFComponent {
 
    public Model getModel(){
         SignifierModelBuilder builder = new SignifierModelBuilder();
-        builder.defineState(stateId);
+        builder.defineState(id);
         for (ReifiedStatement statement : statements) {
-            builder.addReifiedStatement(stateId, statement);
+            builder.addReifiedStatement(id, statement);
         }
         for (ReifiedStatement statement : falseStatements){
-            builder.addFalseReifiedStatement(stateId, statement);
+            builder.addFalseReifiedStatement(id, statement);
         }
         return builder.build();
    }

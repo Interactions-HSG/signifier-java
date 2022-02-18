@@ -15,21 +15,15 @@ import java.util.Set;
 
 public class Plan extends RDFComponent {
 
-    protected Resource planId;
 
     protected Model model;
 
     protected Plan(Resource planId, Model model){
-        this.planId = planId;
-        this.model = getBlock(planId, model);
+        super(planId);
+        this.model = model;
     }
 
-    protected Plan(Resource planId){
-        this.planId = planId;
-        this.model = new ModelBuilder().build();
-    }
 
-    public Resource getId(){ return planId; }
 
     public Model getModel(){
         return model;
@@ -37,7 +31,7 @@ public class Plan extends RDFComponent {
 
     public boolean isDirectPlan(){
         boolean b = true;
-        Set<Resource> types = Models.objectResources(model.filter(planId, RDF.TYPE, null));
+        Set<Resource> types = Models.objectResources(model.filter(id, RDF.TYPE, null));
         for (Resource type : types){
             if (type.equals(RDFS.rdf.createIRI(SignifierOntology.AffordancePlan))){
                 b = false;

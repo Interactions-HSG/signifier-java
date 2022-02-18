@@ -1,5 +1,6 @@
 package org.hyperagents.signifier;
 
+import org.hyperagents.action.Action;
 import org.hyperagents.affordance.Affordance;
 import org.hyperagents.ontologies.SignifierOntology;
 import org.hyperagents.plan.Plan;
@@ -107,6 +108,14 @@ public class SignifierModelBuilder extends ModelBuilder {
         for (Plan plan : plans){
             addParallelPlan(resource, plan);
         }
+    }
+
+
+
+    public void addAction(Resource id, Action action){
+        add(id, rdf.createIRI(SignifierOntology.hasAction), action.getId());
+        addModel(action.getModel());
+
     }
 
 
