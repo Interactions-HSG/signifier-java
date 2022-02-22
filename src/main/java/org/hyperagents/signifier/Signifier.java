@@ -7,6 +7,7 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.hyperagents.affordance.Affordance;
 import org.hyperagents.io.SignifierReader;
+import org.hyperagents.io.SignifierWriter;
 import org.hyperagents.ontologies.SignifierOntology;
 import org.hyperagents.util.Creator;
 import org.hyperagents.util.RDFComponent;
@@ -52,7 +53,6 @@ public class Signifier extends RDFComponent {
 
 
     public static Signifier readSignifier(Resource signifierId,Model m){
-        //Model model = SignifierReader.getBlock(signifierId,m);
         Model model = SignifierReader.retrieveBlock(signifierId, m);
         Signifier.Builder builder = new Signifier.Builder(signifierId);
         Optional<Literal> optionalExpirationDate = Models.objectLiteral(model.filter(signifierId, RDFS.rdf.createIRI(SignifierOntology.hasExpirationDate), null));

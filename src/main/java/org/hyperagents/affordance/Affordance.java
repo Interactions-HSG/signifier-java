@@ -98,9 +98,7 @@ public class Affordance extends RDFComponent {
         Set<Resource> actionIds = Models.objectResources(model.filter(newAffordanceId,
                 RDFS.rdf.createIRI(SignifierOntology.hasAction), null));
         for (Resource actionId : actionIds){
-            Plan.Builder planBuilder = new Plan.Builder(actionId);
-            planBuilder.addModel(RDFS.retrieveBlock(actionId, model));
-            Action action = null;//planBuilder.build();
+            Action action = Action.readAction(actionId, model);
             builder.addAction(action);
         }
         return builder.build();

@@ -7,6 +7,8 @@ import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.rio.RDFFormat;
+import org.hyperagents.affordance.Affordance;
+import org.hyperagents.hypermedia.HypermediaAction;
 import org.hyperagents.util.Creator;
 import org.hyperagents.util.RDFS;
 import org.hyperagents.ontologies.SignifierOntology;
@@ -24,6 +26,7 @@ public class SignifierTest {
     ValueFactory rdf;
     Resource signifierId;
     Model model;
+    Affordance affordance;
     Signifier signifier;
 
     /*@Before
@@ -44,6 +47,14 @@ public class SignifierTest {
         builder.setSalience(10);
         Creator c = new Creator.Builder(rdf.createLiteral("Jérémy Lemée")).build();
         builder.setCreator(c);
+        Resource actionId = rdf.createBNode("action");
+        HypermediaAction action = new HypermediaAction.Builder(actionId, "http://example.org", "GET")
+                .build();
+        Resource affordanceId = rdf.createBNode("affordance");
+         affordance = new Affordance.Builder(affordanceId)
+                .addAction(action)
+                        .build();
+        builder.addAffordance(affordance);
         signifier = builder.build();
         model = signifier.getModel();
         //System.out.println(signifier.getTextTriples(RDFFormat.TURTLE));
@@ -84,4 +95,17 @@ public class SignifierTest {
         assertEquals(c1.getValue(), c2.getValue());
         assertEquals(c1.getModel(), c2.getModel());
     }
+
+    @Test
+    public void checkAffordance(){
+        assertEquals(affordance, signifier.getAffordanceList().get(0));
+    }
+
+    /*@Test
+    public void readSignifier(){
+        Signifier s = Signifier.readSignifier(signifier.getId(), signifier.getModel());
+        assertEquals(signifier, s);
+    }*/
+
+
 }
