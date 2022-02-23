@@ -4,6 +4,7 @@ import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.hyperagents.action.Action;
 import org.hyperagents.hypermedia.HypermediaAction;
 import org.hyperagents.signifier.SignifierModelBuilder;
 import org.junit.Before;
@@ -51,6 +52,20 @@ public class HypermediaActionTest {
         assertEquals(new HashSet<>(), action.getOperationTypes());
         assertEquals(headers, action.getHeaders());
         assertEquals(Optional.of(payload), action.getPayload());
+
+    }
+
+    @Test
+    public void testGetAsHypermediaAction(){
+        String payload = "{\"name\": \"action\"}";
+        Map<String, String> headers = new Hashtable<>();
+        headers.put("Content-Type", "application/json");
+        Action action = new HypermediaAction.Builder(actionId, url, "POST")
+                .addHeader("Content-Type", "application/json")
+                .setPayload(payload)
+                .build();
+        HypermediaAction hypermediaAction = HypermediaAction.getAsHypermediaAction(action);
+        assertEquals(action, hypermediaAction);
 
     }
 }
