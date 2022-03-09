@@ -81,10 +81,17 @@ public class SignifierModelBuilder extends ModelBuilder {
         addState(state);
     }
 
-    public void addCreator(Resource affordanceId, Creator creator){
-        add(affordanceId, rdf.createIRI(SignifierOntology.hasCreator), creator.getValue());
+    public void addCreator(Resource signifierId, Creator creator){
+        add(signifierId, rdf.createIRI(SignifierOntology.hasCreator), creator.getValue());
         if (creator.getModel().isPresent()){
             addModel(creator.getModel().get());
+        }
+    }
+
+    public void addLocation(Resource signifierId, Location location){
+        add(signifierId, rdf.createIRI(SignifierOntology.hasLocation), location.getValue());
+        if (location.getModel().isPresent()){
+            addModel(location.getModel().get());
         }
     }
 

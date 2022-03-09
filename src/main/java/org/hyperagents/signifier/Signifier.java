@@ -10,6 +10,7 @@ import org.hyperagents.io.SignifierReader;
 import org.hyperagents.io.SignifierWriter;
 import org.hyperagents.ontologies.SignifierOntology;
 import org.hyperagents.util.Creator;
+import org.hyperagents.util.Location;
 import org.hyperagents.util.RDFComponent;
 import org.hyperagents.util.RDFS;
 
@@ -23,14 +24,16 @@ public class Signifier extends RDFComponent {
     private Optional<Instant> expirationDate;
     private Optional<Integer> salience;
     private Optional<Creator> creator;
+    private Optional<Location> location;
     private Set<Affordance> affordances;
     private Model model;
 
-    protected Signifier(Resource signifierId, Optional<Instant> expirationDate, Optional<Integer> salience, Optional<Creator> creator, Set<Affordance>  affordances, Model model){
+    protected Signifier(Resource signifierId, Optional<Instant> expirationDate, Optional<Integer> salience, Optional<Creator> creator, Optional<Location> location, Set<Affordance>  affordances, Model model){
         super(signifierId);
         this.expirationDate = expirationDate;
         this.salience = salience;
         this.creator = creator;
+        this.location = location;
         this.affordances = affordances;
         this.model = model;
     }
@@ -41,6 +44,8 @@ public class Signifier extends RDFComponent {
     public Optional<Integer> getSalience() { return salience; }
 
     public Optional<Creator> getCreator() { return creator; }
+
+    public Optional<Location> getLocation() { return location; }
 
     public Set<Affordance> getAffordances() { return affordances; }
 
@@ -88,6 +93,7 @@ public class Signifier extends RDFComponent {
         private Optional<Instant> expirationDate;
         private Optional<Integer> salience;
         private Optional<Creator> creator;
+        private Optional<Location> location;
         private Set<Affordance> affordances;
         private SignifierModelBuilder graphBuilder;
 
@@ -95,6 +101,8 @@ public class Signifier extends RDFComponent {
             this.signifierId=signifierId;
             this.expirationDate = Optional.empty();
             this.salience = Optional.empty();
+            this.creator = Optional.empty();
+            this.location = Optional.empty();
             this.affordances =  new HashSet<>();
             this.graphBuilder= new SignifierModelBuilder();
             this.graphBuilder.addType(signifierId, RDFS.rdf.createIRI(SignifierOntology.Signifier));
@@ -159,8 +167,14 @@ public class Signifier extends RDFComponent {
             return this;
         }
 
+        public Builder setLocation(Location l){
+            this.location = Optional.of(l);
+            this.graphBuilder.addLocation(signifierId, l);
+            return this;
+        }
+
         public Signifier build(){
-            return new Signifier(signifierId, expirationDate, salience, creator, affordances, graphBuilder.build());
+            return new Signifier(signifierId, expirationDate, salience, creator, location,  affordances, graphBuilder.build());
         }
     }
 }

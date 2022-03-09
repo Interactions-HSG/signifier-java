@@ -20,6 +20,8 @@ public class SignifierOntology {
 
     public static final String hasCreator = PREFIX + "hasCreator";
 
+    public static final String hasLocation = PREFIX + "hasLocation";
+
     public static final String Affordance = PREFIX + "Affordance";
 
     public static final String SequenceAffordance = PREFIX + "SequenceAffordance";
