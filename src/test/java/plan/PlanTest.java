@@ -1,11 +1,11 @@
-package util;
+package plan;
 
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.hyperagents.ontologies.SignifierOntology;
-import org.hyperagents.util.Plan;
+import org.hyperagents.plan.Plan;
 import org.hyperagents.util.RDFS;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class PlanTest {
 
     @Test
     public void checkId(){
-        assertEquals(planId, plan.getPlanId());
+        assertEquals(planId, plan.getId());
         assertEquals(model, plan.getModel());
     }
 }

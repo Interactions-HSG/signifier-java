@@ -2,7 +2,7 @@ package org.hyperagents.hypermedia;
 
 public class HypermediaOntology {
 
-    public static String PREFIX = "http://example.com/";
+    public static String PREFIX = "http://example.org/hypermedia/";
 
     public static String HypermediaPlan = PREFIX + "HypermediaPlan";
 

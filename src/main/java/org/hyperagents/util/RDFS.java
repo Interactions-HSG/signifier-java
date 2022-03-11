@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
+import org.hyperagents.plan.Plan;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -56,7 +57,7 @@ public class RDFS {
         Resource currentListId = listId;
         while (iterator.hasNext()) {
             Affordance a = iterator.next();
-            m.add(currentListId, rdf.createIRI(RDFSOntology.first), a.getAffordanceId());
+            m.add(currentListId, rdf.createIRI(RDFSOntology.first), a.getId());
             m.addAll(a.getModel());
             if (iterator.hasNext()) {
                 BNode newListId = rdf.createBNode();
@@ -95,6 +96,78 @@ public class RDFS {
 
         }
         return list;
+    }
+
+    public static IRI createPredicate(int i){
+        String iriString = "http://www.w3.org/1999/02/22-rdf-syntax-ns#_"+i;
+        IRI iri = rdf.createIRI(iriString);
+        return iri;
+    }
+
+    public static List<Value> readSeq(Resource resourceId,Model model){
+        List<Value> list = new ArrayList<>();
+        int i = 1;
+        boolean b =true;
+        while(b){
+            Optional<Value> optionalValue = Models.object(model.filter(resourceId, createPredicate(i),null));
+            if (optionalValue.isPresent()){
+                Value value = optionalValue.get();
+                list.add(value);
+                i = i + 1;
+            }
+            else {
+                b = false;
+            }
+        }
+        return list;
+
+    }
+
+    public static List<Resource> readResourceSeq(Resource resourceId,Model model){
+        List<Resource> list = new ArrayList<>();
+        int i = 1;
+        boolean b =true;
+        while(b){
+            Optional<Resource> optionalResource = Models.objectResource(model.filter(resourceId, createPredicate(i),null));
+            if (optionalResource.isPresent()){
+                Resource resource = optionalResource.get();
+                list.add(resource);
+                i = i + 1;
+            }
+            else {
+                b = false;
+            }
+        }
+        return list;
+
+    }
+
+    public static Model createSeq(Resource seqId, List<Value> values) {
+        Model m = new DynamicModelFactory().createEmptyModel();
+        for (int i = 0; i<values.size();i++){
+            m.add(seqId, createPredicate(i+1), values.get(i));
+        }
+        return m;
+    }
+
+    public static Model createAffordanceSeq(Resource seqId, List<Affordance> list) {
+        Model m = new DynamicModelFactory().createEmptyModel();
+        for (int i = 0;i<list.size();i++){
+            Affordance a = list.get(i);
+            m.add(seqId, createPredicate(i+1), a.getId());
+            m.addAll(a.getModel());
+        }
+        return m;
+    }
+
+    public static Model createPlanSeq(Resource seqId, List<Plan> list) {
+        Model m = new DynamicModelFactory().createEmptyModel();
+        for (int i = 0;i<list.size();i++){
+            Plan p = list.get(i);
+            m.add(seqId, createPredicate(i+1), p.getId());
+            m.addAll(p.getModel());
+        }
+        return m;
     }
 
     public static List<Resource> readResourceList(Resource resourceId,Model model){

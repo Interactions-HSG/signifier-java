@@ -1,5 +1,6 @@
 package org.hyperagents.util;
 
+import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.hyperagents.io.SignifierWriter;
 import org.hyperagents.io.SignifierReader;
 import org.hyperagents.signifier.SignifierModelBuilder;
@@ -11,9 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 
-public class State {
+public class State extends RDFComponent {
 
-    private Resource stateId;
 
     private Set<ReifiedStatement> statements;
 
@@ -21,14 +21,11 @@ public class State {
 
 
     protected State(Resource stateId, Set<ReifiedStatement> statements, Set<ReifiedStatement> falseStatements) {
-        this.stateId = stateId;
+        super(stateId);
         this.statements = statements;
         this.falseStatements = falseStatements;
     }
 
-    public Resource getStateId() {
-        return stateId;
-    }
 
     public Set<ReifiedStatement> getStatements() {
         return statements;
@@ -49,20 +46,49 @@ public class State {
 
    public Model getModel(){
         SignifierModelBuilder builder = new SignifierModelBuilder();
+        builder.defineState(id);
         for (ReifiedStatement statement : statements) {
-            builder.addReifiedStatement(stateId, statement);
+            builder.addReifiedStatement(id, statement);
         }
         for (ReifiedStatement statement : falseStatements){
-            builder.addFalseReifiedStatement(stateId, statement);
+            builder.addFalseReifiedStatement(id, statement);
         }
         return builder.build();
    }
 
-   @Override
-   public String toString(){
-        return SignifierWriter.writeModel(getModel());
-   }
+   public Set<Statement> getStatementSet(){
+        Set<Statement> trueStatements = new HashSet<>();
+        Set<ReifiedStatement> statements = getStatements();
+        for (ReifiedStatement statement : statements){
+            trueStatements.add(statement.getStatement());
+        }
+        return trueStatements;
 
+    }
+
+    public Set<Statement> getFalseStatementSet(){
+        Set<Statement> falseStatements = new HashSet<>();
+        Set<ReifiedStatement> statements = getFalseStatements();
+        for (ReifiedStatement statement : statements){
+            falseStatements.add(statement.getStatement());
+        }
+        return falseStatements;
+
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean b = false;
+        State state = (State) obj;
+        Set<Statement> trueStatements = getStatementSet();
+        Set<Statement> falseStatement = getFalseStatementSet();
+        Set<Statement> trueStateStatements = state.getStatementSet();
+        Set<Statement> falseStateStatements = state.getFalseStatementSet();
+        if (trueStatements.equals(trueStateStatements) && falseStatements.equals(falseStateStatements)){
+            b = true;
+        }
+        return b;
+    }
 
     public static State retrieveState(Resource stateId, Model m) {
         State.Builder builder = new State.Builder(stateId);

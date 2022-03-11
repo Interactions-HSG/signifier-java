@@ -1,48 +1,53 @@
 package org.hyperagents.affordance;
+import org.eclipse.rdf4j.model.util.ModelBuilder;
+import org.hyperagents.action.Action;
 import org.hyperagents.io.SignifierReader;
-import org.hyperagents.io.SignifierWriter;
 import org.hyperagents.ontologies.SignifierOntology;
+import org.hyperagents.plan.DirectPlan;
 import org.hyperagents.signifier.SignifierModelBuilder;
-import org.hyperagents.util.Plan;
+import org.hyperagents.plan.Plan;
+import org.hyperagents.util.RDFComponent;
 import org.hyperagents.util.State;
 import org.hyperagents.util.RDFS;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.util.Models;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
-public class Affordance {
+public class Affordance extends RDFComponent {
 
     protected Resource affordanceId;
 
     private Optional<State> precondition;
-    private Optional<State> objective;
-    private Set<Plan> plans;
+    private Optional<State> postcondition;
+    private Set<State> objectives;
+    private Set<Action> actions;
 
     private Model model;
 
-    protected Affordance(Resource affordanceId, Optional<State> precondition, Optional<State> objective, Set<Plan> plans, Model model){
+    protected Affordance(Resource affordanceId, Optional<State> precondition, Optional<State> postcondition, Set<State> objectives, Set<Action> actions, Model model){
+        super(affordanceId);
         this.affordanceId = affordanceId;
         this.precondition = precondition;
-        this.objective = objective;
-        this.plans = plans;
+        this.postcondition = postcondition;
+        this.objectives = objectives;
+        this.actions = actions;
         this.model = model;
     }
 
-    public Resource getAffordanceId(){
-        return affordanceId;
-    }
+    public Resource getId(){ return affordanceId; }
 
     public Optional<State> getPrecondition() { return precondition; }
 
-    public Optional<State> getObjective(){ return objective; }
+    public Optional<State> getPostcondition(){ return postcondition; }
 
-    public Set<Plan> getPlans(){ return plans; }
+    public Set<State> getObjectives(){ return objectives; }
 
-    public Plan getFirstPlan(){ return new Vector<Plan>(plans).firstElement(); }
+    public List<State> getObjectiveList(){ return new ArrayList<>(objectives); }
+
+    public Set<Action> getActions(){ return actions; }
+
+    public Action getFirstAction(){ return new Vector<Action>(actions).firstElement(); }
 
     public Model getModel(){
         return model;
@@ -66,11 +71,7 @@ public class Affordance {
         return getLiteral(RDFS.rdf.createIRI(predicate));
     }
 
-    @Override
-    public String toString(){
-        return SignifierWriter.writeModel(model);
 
-    }
 
     public static Affordance retrieveAffordance(Resource newAffordanceId, Model model) {
         Affordance.Builder builder = new Affordance.Builder(newAffordanceId);
@@ -82,19 +83,23 @@ public class Affordance {
             State precondition = State.retrieveState(preconditionId.get(),m);
             builder.setPrecondition(precondition);
         }
-        Optional<Resource> objectiveId = Models.objectResource(m.filter(newAffordanceId,
-                RDFS.rdf.createIRI(SignifierOntology.hasObjective),null));
-        if (objectiveId.isPresent()){
-            State objective = State.retrieveState(objectiveId.get(),m);
-            builder.setObjective(objective);
+        Optional<Resource> postconditionId = Models.objectResource(m.filter(newAffordanceId,
+                RDFS.rdf.createIRI(SignifierOntology.hasPostcondition),null));
+        if (postconditionId.isPresent()){
+            State postcondition = State.retrieveState(postconditionId.get(),m);
+            builder.setPostcondition(postcondition);
         }
-        Set<Resource> planIds = Models.objectResources(model.filter(newAffordanceId,
-                RDFS.rdf.createIRI(SignifierOntology.hasPlan), null));
-        for (Resource planId : planIds){
-            Plan.Builder planBuilder = new Plan.Builder(planId);
-            planBuilder.addModel(RDFS.retrieveBlock(planId, model));
-            Plan plan = planBuilder.build();
-            builder.addPlan(plan);
+        Set<Resource> objectiveIds = Models.objectResources(model.filter(newAffordanceId,
+                RDFS.rdf.createIRI(SignifierOntology.hasObjective), null));
+        for (Resource objectiveId: objectiveIds){
+            State objective = State.retrieveState(objectiveId, model);
+            builder.addObjective(objective);
+        }
+        Set<Resource> actionIds = Models.objectResources(model.filter(newAffordanceId,
+                RDFS.rdf.createIRI(SignifierOntology.hasAction), null));
+        for (Resource actionId : actionIds){
+            Action action = Action.readAction(actionId, model);
+            builder.addAction(action);
         }
         return builder.build();
     }
@@ -106,16 +111,17 @@ public class Affordance {
     public static class Builder{
         protected Resource affordanceId;
         protected Optional<State> precondition;
-        protected Optional<State> objective;
-        protected Set<Plan> plans;
+        protected Optional<State> postcondition;
+        protected Set<State> objectives;
+        protected Set<Action> actions;
         protected SignifierModelBuilder graphBuilder;
         protected ValueFactory rdf;
 
         public Builder(Resource affordanceId){
             this.affordanceId = affordanceId;
             this.precondition = Optional.empty();
-            this.objective = Optional.empty();
-            this.plans = new HashSet<>();
+            this.objectives = new HashSet<>();
+            this.actions = new HashSet<>();
             this.graphBuilder = new SignifierModelBuilder();
             this.rdf=RDFS.rdf;
         }
@@ -126,11 +132,18 @@ public class Affordance {
             return this;
         }
 
-        public Builder setObjective(State objective){
-            this.objective = Optional.of(objective);
-            this.graphBuilder.addObjective(affordanceId,objective);
+        public Builder setPostcondition(State postcondition){
+            this.postcondition = Optional.of(postcondition);
+            this.graphBuilder.addPostcondition(affordanceId,postcondition);
             return this;
         }
+
+        public Builder addObjective(State objective){
+            this.objectives.add(objective);
+            this.graphBuilder.addObjective(affordanceId, objective);
+            return this;
+        }
+
 
         public Builder add(Model m){
             this.graphBuilder.addModel(m);
@@ -151,21 +164,17 @@ public class Affordance {
             return this;
         }
 
-        public Builder addPlan(Plan plan){
-            this.plans.add(plan);
-            graphBuilder.addPlan(affordanceId, plan);
+        public Builder addAction(Action action){
+            this.actions.add(action);
+            graphBuilder.addAction(affordanceId, action);
             return this;
         }
 
-        public Builder addPlans(Set<Plan> plans){
-            this.plans.addAll(plans);
-            graphBuilder.addPlans(affordanceId, plans);
-            return this;
-        }
+
 
         public Affordance build(){
             graphBuilder.addType(affordanceId, rdf.createIRI(SignifierOntology.Affordance));
-            return new Affordance(affordanceId, precondition, objective, plans, graphBuilder.build());
+            return new Affordance(affordanceId, precondition, postcondition, objectives, actions, graphBuilder.build());
         }
     }
 }

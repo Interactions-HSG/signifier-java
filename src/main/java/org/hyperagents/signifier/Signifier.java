@@ -1,13 +1,17 @@
 package org.hyperagents.signifier;
 
 import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.util.ModelBuilder;
 import org.eclipse.rdf4j.model.util.Models;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.hyperagents.affordance.Affordance;
 import org.hyperagents.io.SignifierReader;
+import org.hyperagents.io.SignifierWriter;
 import org.hyperagents.ontologies.SignifierOntology;
 import org.hyperagents.util.Creator;
+import org.hyperagents.util.Location;
+import org.hyperagents.util.RDFComponent;
 import org.hyperagents.util.RDFS;
 
 import java.io.ByteArrayOutputStream;
@@ -16,32 +20,32 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 import java.util.*;
 
-public class Signifier {
-    private Resource signifierId;
+public class Signifier extends RDFComponent {
     private Optional<Instant> expirationDate;
     private Optional<Integer> salience;
     private Optional<Creator> creator;
+    private Optional<Location> location;
     private Set<Affordance> affordances;
     private Model model;
 
-    protected Signifier(Resource signifierId, Optional<Instant> expirationDate, Optional<Integer> salience, Optional<Creator> creator, Set<Affordance>  affordances, Model model){
-        this.signifierId=signifierId;
+    protected Signifier(Resource signifierId, Optional<Instant> expirationDate, Optional<Integer> salience, Optional<Creator> creator, Optional<Location> location, Set<Affordance>  affordances, Model model){
+        super(signifierId);
         this.expirationDate = expirationDate;
         this.salience = salience;
         this.creator = creator;
+        this.location = location;
         this.affordances = affordances;
-        this.model=model;
+        this.model = model;
     }
 
-    public Resource getSignifierId(){
-        return signifierId;
-    }
 
     public Optional<Instant> getExpirationDate() { return expirationDate; }
 
     public Optional<Integer> getSalience() { return salience; }
 
     public Optional<Creator> getCreator() { return creator; }
+
+    public Optional<Location> getLocation() { return location; }
 
     public Set<Affordance> getAffordances() { return affordances; }
 
@@ -51,18 +55,9 @@ public class Signifier {
         return model;
     }
 
-    public String getTextTriples(RDFFormat format){
-        ByteArrayOutputStream output=new ByteArrayOutputStream();
-        Rio.write(model,output,format);
-        return output.toString();
-    }
 
-    public String toString(){
-        return getTextTriples(RDFFormat.TURTLE);
-    }
 
     public static Signifier readSignifier(Resource signifierId,Model m){
-        //Model model = SignifierReader.getBlock(signifierId,m);
         Model model = SignifierReader.retrieveBlock(signifierId, m);
         Signifier.Builder builder = new Signifier.Builder(signifierId);
         Optional<Literal> optionalExpirationDate = Models.objectLiteral(model.filter(signifierId, RDFS.rdf.createIRI(SignifierOntology.hasExpirationDate), null));
@@ -98,6 +93,7 @@ public class Signifier {
         private Optional<Instant> expirationDate;
         private Optional<Integer> salience;
         private Optional<Creator> creator;
+        private Optional<Location> location;
         private Set<Affordance> affordances;
         private SignifierModelBuilder graphBuilder;
 
@@ -105,6 +101,8 @@ public class Signifier {
             this.signifierId=signifierId;
             this.expirationDate = Optional.empty();
             this.salience = Optional.empty();
+            this.creator = Optional.empty();
+            this.location = Optional.empty();
             this.affordances =  new HashSet<>();
             this.graphBuilder= new SignifierModelBuilder();
             this.graphBuilder.addType(signifierId, RDFS.rdf.createIRI(SignifierOntology.Signifier));
@@ -169,8 +167,14 @@ public class Signifier {
             return this;
         }
 
+        public Builder setLocation(Location l){
+            this.location = Optional.of(l);
+            this.graphBuilder.addLocation(signifierId, l);
+            return this;
+        }
+
         public Signifier build(){
-            return new Signifier(signifierId, expirationDate, salience, creator, affordances, graphBuilder.build());
+            return new Signifier(signifierId, expirationDate, salience, creator, location,  affordances, graphBuilder.build());
         }
     }
 }

@@ -9,6 +9,9 @@ import org.eclipse.rdf4j.model.vocabulary.RDF;
 import org.hyperagents.ontologies.SignifierOntology;
 import org.hyperagents.util.RDFS;
 
+import java.util.Map;
+import java.util.Set;
+
 public class HypermediaModelBuilder extends ModelBuilder {
 
     private ValueFactory rdf = RDFS.rdf;
@@ -32,6 +35,12 @@ public class HypermediaModelBuilder extends ModelBuilder {
         add(planId, rdf.createIRI(HypermediaOntology.hasOperationType), operationType);
     }
 
+    public void addOperationTypes(Resource id, Set<String> operationTypes){
+        for (String operationType: operationTypes){
+            addOperationType(id, operationType);
+        }
+    }
+
     public void setMethod(Resource planId, String method){
         add(planId, rdf.createIRI(HypermediaOntology.hasMethod), method);
     }
@@ -39,6 +48,14 @@ public class HypermediaModelBuilder extends ModelBuilder {
     public void addHeader(Resource planId, Header header){
         add(planId, rdf.createIRI(HypermediaOntology.hasHeader), header.getHeaderId() );
         addModel(header.getModel());
+    }
+
+    public void addHeaders(Resource id, Map<String, String> headers){
+        for (String key: headers.keySet()){
+            String value = headers.get(key);
+            Header h = new Header(key, value);
+            addHeader(id, h);
+        }
     }
 
     public void setPayload(Resource planId, String payload){
