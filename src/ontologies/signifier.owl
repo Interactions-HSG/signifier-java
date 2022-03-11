@@ -1,0 +1,147 @@
+@prefix : <https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier> .
+
+<https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#hasAbility
+:hasAbility rdf:type owl:ObjectProperty ;
+            rdfs:subPropertyOf owl:topObjectProperty ;
+            rdfs:domain :Agent .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#hasAction
+:hasAction rdf:type owl:ObjectProperty ;
+           rdfs:subPropertyOf owl:topObjectProperty ;
+           rdfs:domain :Affordance ;
+           rdfs:range :Action .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#hasAffordance
+:hasAffordance rdf:type owl:ObjectProperty ;
+               rdfs:subPropertyOf owl:topObjectProperty ;
+               rdfs:domain :Signifier ;
+               rdfs:range :Affordance .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#hasCreator
+:hasCreator rdf:type owl:ObjectProperty ;
+            rdfs:subPropertyOf owl:topObjectProperty ;
+            rdfs:domain :Signifier ;
+            rdfs:range :Creator .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#hasLocation
+:hasLocation rdf:type owl:ObjectProperty ;
+             rdfs:subPropertyOf owl:topObjectProperty ;
+             rdf:type owl:FunctionalProperty ;
+             rdfs:domain :Signifier ;
+             rdfs:range :Location .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#hasObjective
+:hasObjective rdf:type owl:ObjectProperty ;
+              rdfs:subPropertyOf owl:topObjectProperty ;
+              rdfs:domain :Affordance ;
+              rdfs:range :State .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#hasPostcondition
+:hasPostcondition rdf:type owl:ObjectProperty ;
+                  rdfs:subPropertyOf owl:topObjectProperty ;
+                  rdf:type owl:FunctionalProperty ;
+                  rdfs:domain :Affordance ;
+                  rdfs:range :State .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#hasPrecondition
+:hasPrecondition rdf:type owl:ObjectProperty ;
+                 rdfs:subPropertyOf owl:topObjectProperty ;
+                 rdf:type owl:FunctionalProperty ;
+                 rdfs:domain :Affordance ;
+                 rdfs:range :State .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#hasExpirationDate
+:hasExpirationDate rdf:type owl:DatatypeProperty ;
+                   rdfs:subPropertyOf owl:topDataProperty ;
+                   rdfs:domain :Signifier ;
+                   rdfs:range xsd:dateTime .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#hasSalience
+:hasSalience rdf:type owl:DatatypeProperty ;
+             rdfs:subPropertyOf owl:topDataProperty ;
+             rdfs:domain :Signifier ;
+             rdfs:range xsd:int .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#Action
+:Action rdf:type owl:Class .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#Affordance
+:Affordance rdf:type owl:Class .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#Agent
+:Agent rdf:type owl:Class .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#Creator
+:Creator rdf:type owl:Class .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#Location
+:Location rdf:type owl:Class .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#Signifier
+:Signifier rdf:type owl:Class .
+
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#State
+:State rdf:type owl:Class .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  https://github.com/perma-id/w3id.org/tree/master/interactions/ontologies/signifier#thisAgent
+:thisAgent rdf:type owl:NamedIndividual .
+
+
+#################################################################
+#    General axioms
+#################################################################
+
+[ rdf:type owl:AllDisjointClasses ;
+  owl:members ( :Action
+                :Affordance
+                :Agent
+                :Creator
+                :Location
+                :Signifier
+                :State
+              )
+] .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
